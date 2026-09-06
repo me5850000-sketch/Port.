@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Living Mood — Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#120f0c;
+    --panel:#1b1613;
+    --panel-2:#221c17;
+    --gold:#c8a24b;
+    --gold-soft:#8a6f35;
+    --teal:#5e9c93;
+    --teal-soft:#3f6862;
+    --ivory:#efe6d8;
+    --muted:#a89a86;
+    --line: rgba(239,230,216,0.12);
+    --radius: 3px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--ivory);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  .ar{ font-family:'Tajawal', sans-serif; direction:rtl; text-align:right; color:var(--muted); }
+  a{ color:inherit; }
+  img,iframe{ display:block; max-width:100%; }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px clamp(20px,5vw,64px);
+    background:rgba(18,15,12,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{ display:flex; align-items:baseline; gap:10px; font-family:'Fraunces', serif; font-size:19px; }
+  .brand span{ color:var(--muted); font-family:'Inter',sans-serif; font-size:12px; letter-spacing:.04em; }
+  nav{ display:flex; gap:22px; font-size:13px; color:var(--muted); }
+  nav a{ text-decoration:none; transition:color .2s; }
+  nav a:hover{ color:var(--gold); }
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding:min(14vw,120px) clamp(20px,5vw,64px) 80px;
+    max-width:900px;
+  }
+  .hero h1{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(34px,6vw,58px);
+    line-height:1.12;
+    letter-spacing:-0.01em;
+  }
+  .underline-wrap{ position:relative; display:inline-block; }
+  .underline-wrap svg{ position:absolute; left:0; bottom:-6px; width:100%; height:10px; }
+  .underline-wrap path{
+    stroke:var(--gold); stroke-width:2; fill:none;
+    stroke-dasharray:400; stroke-dashoffset:400;
+    animation:draw 1.4s .3s ease forwards;
+  }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  .hero p.ar{ margin-top:26px; font-size:18px; max-width:560px; margin-left:auto; }
+  .hero .quicklinks{ display:flex; flex-wrap:wrap; gap:10px 22px; margin-top:40px; font-size:13px; color:var(--muted); }
+  .hero .quicklinks a{ text-decoration:none; border-bottom:1px solid transparent; }
+  .hero .quicklinks a:hover{ border-color:var(--gold); color:var(--gold); }
+
+  /* ---------- section shell ---------- */
+  .world{ padding:10px clamp(20px,5vw,64px) 40px; }
+  .world-head{
+    display:flex; align-items:center; gap:16px;
+    max-width:1180px; margin:60px auto 44px;
+  }
+  .world-head .tag{
+    font-size:12px; padding:5px 12px; border-radius:20px;
+    border:1px solid var(--line); color:var(--muted); white-space:nowrap;
+  }
+  .world-head h2{ font-family:'Fraunces', serif; font-weight:500; font-size:clamp(22px,3vw,30px); }
+  .world-head hr{ flex:1; border:none; border-top:1px solid var(--line); }
+  .world.gold .world-head .tag{ border-color:var(--gold-soft); color:var(--gold); }
+  .world.teal .world-head .tag{ border-color:var(--teal-soft); color:var(--teal); }
+
+  /* ---------- project row ---------- */
+  .project{
+    max-width:1180px; margin:0 auto 96px;
+    display:grid; grid-template-columns:1fr 1fr; gap:52px; align-items:center;
+  }
+  .project.reverse .frame-col{ order:2; }
+  .project.reverse .text-col{ order:1; }
+  @media(max-width:860px){
+    .project{ grid-template-columns:1fr; gap:28px; }
+    .project.reverse .frame-col{ order:1; }
+    .project.reverse .text-col{ order:2; }
+  }
+
+  .text-col .status{
+    display:inline-block; font-size:11.5px; color:var(--muted);
+    border:1px solid var(--line); padding:3px 10px; border-radius:20px; margin-bottom:14px;
+  }
+  .world.gold .text-col .status{ color:var(--gold); border-color:var(--gold-soft); }
+  .world.teal .text-col .status{ color:var(--teal); border-color:var(--teal-soft); }
+  .text-col h3{ font-family:'Fraunces', serif; font-size:28px; font-weight:500; margin-bottom:14px; }
+  .text-col p.ar{ font-size:16px; margin-left:0; margin-bottom:20px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px; }
+  .chips span{
+    font-size:12px; color:var(--muted); border:1px solid var(--line);
+    padding:5px 10px; border-radius:20px;
+  }
+  .visit{
+    display:inline-flex; align-items:center; gap:8px; font-size:14px;
+    text-decoration:none; padding:11px 20px; border-radius:2px;
+    border:1px solid var(--gold-soft); color:var(--gold);
+    transition:background .2s, color .2s;
+  }
+  .world.teal .visit{ border-color:var(--teal-soft); color:var(--teal); }
+  .visit:hover{ background:var(--gold); color:#14110f; }
+  .world.teal .visit:hover{ background:var(--teal); color:#0c1614; }
+
+  /* ---------- device frame ---------- */
+  .frame-col .device{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 30px 60px -30px rgba(0,0,0,0.6);
+  }
+  .device .bar{
+    display:flex; align-items:center; gap:6px;
+    padding:10px 12px; background:var(--panel-2); border-bottom:1px solid var(--line);
+  }
+  .device .bar i{ width:8px; height:8px; border-radius:50%; background:#463b32; }
+  .device .bar .url{
+    margin-left:10px; font-size:11px; color:var(--muted);
+    background:var(--bg); padding:4px 10px; border-radius:20px; flex:1;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .device .screen{
+    position:relative; width:100%; height:340px;
+    background:#0d0b09;
+  }
+  .device .screen iframe{
+    position:absolute; top:0; left:0;
+    width:250%; height:250%;
+    transform:scale(0.4); transform-origin:top left;
+    border:none;
+  }
+  .device .screen .fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:12px; color:var(--muted); text-align:center; padding:20px; pointer-events:none;
+  }
+
+  /* ---------- explainer ---------- */
+  .explainer{
+    max-width:1180px; margin:20px auto 100px; padding:44px clamp(20px,4vw,48px);
+    background:var(--panel); border:1px solid var(--line); border-radius:6px;
+  }
+  .explainer h2{ font-family:'Fraunces', serif; font-weight:500; font-size:24px; margin-bottom:8px; }
+  .explainer > p.ar{ margin-left:0; font-size:15px; max-width:680px; margin-bottom:32px; }
+  .flow{ display:flex; align-items:stretch; gap:0; flex-wrap:wrap; }
+  .flow .step{
+    flex:1; min-width:180px; padding:20px; border:1px solid var(--line); border-radius:4px;
+    background:var(--panel-2);
+  }
+  .flow .step h4{ font-size:14px; color:var(--gold); margin-bottom:8px; font-family:'Inter',sans-serif; font-weight:600; }
+  .flow .step p{ font-size:13px; color:var(--muted); font-family:'Tajawal',sans-serif; direction:rtl; text-align:right; }
+  .flow .connector{ display:flex; align-items:center; justify-content:center; width:36px; color:var(--muted); font-size:18px; }
+  @media(max-width:760px){ .flow{ flex-direction:column; } .flow .connector{ transform:rotate(90deg); width:auto; height:20px; } }
+  .note{
+    margin-top:26px; padding-top:22px; border-top:1px solid var(--line);
+    font-size:13.5px; color:var(--muted); font-family:'Tajawal',sans-serif; direction:rtl; text-align:right;
+  }
+  .note b{ color:var(--ivory); }
+
+  footer{
+    padding:40px clamp(20px,5vw,64px) 60px;
+    display:flex; flex-wrap:wrap; gap:20px; align-items:center; justify-content:space-between;
+    border-top:1px solid var(--line);
+    font-size:13px; color:var(--muted);
+  }
+  footer .socials{ display:flex; gap:18px; }
+  footer .socials a{ text-decoration:none; }
+  footer .socials a:hover{ color:var(--gold); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Living Mood <span>/ systems</span></div>
+  <nav>
+    <a href="#business">Business</a>
+    <a href="#labeling">Labeling Ops</a>
+    <a href="#how">How it runs</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>I build the systems<br>
+  <span class="underline-wrap">behind the business.
+    <svg viewBox="0 0 420 10" preserveAspectRatio="none"><path d="M2,6 C120,10 300,2 418,6"/></svg>
+  </span></h1>
+  <p class="ar">مش واجهات بس — دي أنظمة شغالة فعليًا جوه مصنع وجوه فريق عمليات حقيقي، من الأوردر لحد المرتبات، ومن الفورم اللي العامل بيملاه لحد الداشبورد اللي المدير بيتابع بيه.</p>
+  <div class="quicklinks">
+    <a href="#dashliving">Admin Dashboard</a>
+    <a href="#catalog">Catalog</a>
+    <a href="#meti-dash">METI Dashboard</a>
+    <a href="#traker">Traker</a>
+  </div>
+</section>
+
+<!-- ================= BUSINESS SYSTEMS ================= -->
+<section class="world gold" id="business">
+  <div class="world-head">
+    <span class="tag">Living Mood</span>
+    <h2>Business Systems</h2>
+    <hr>
+  </div>
+
+  <div class="project" id="dashliving">
+    <div class="frame-col">
+      <div class="device">
+        <div class="bar"><i></i><i></i><i></i><span class="url">livingmoood-commits.github.io/Admin-Dashboard</span></div>
+        <div class="screen">
+          <div class="fallback">لو العرض الحي متحملش — دوس على الزرار وشوفه لايف</div>
+          <iframe src="https://livingmoood-commits.github.io/Admin-Dashboard/" loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+    <div class="text-col">
+      <span class="status">Own build · in daily use</span>
+      <h3>Admin Dashboard — نظام إدارة المصنع</h3>
+      <p class="ar">النظام اللي بيدير مصنع Living Mood بالكامل من غير أي قالب SaaS جاهز: مرتبات، تكاليف، خزنة (Cash Flow)، مصاريف يومية وثابتة، ديون، مسحوبات شركاء، تنظيم شغل الصنايعية يوم بيوم، بنود المشاريع، وصولًا لعروض الأسعار ومتابعة الدفعات مع العميل. أي رقم بيتغير بيتحدّث في كل الشاشات المرتبطة بيه أوتوماتيك.</p>
+      <div class="chips"><span>Google Apps Script</span><span>Google Sheets backend</span><span>Real-time sync engine</span><span>Role-based access</span></div>
+      <a class="visit" href="https://livingmoood-commits.github.io/Admin-Dashboard/" target="_blank">Open the dashboard</a>
+    </div>
+  </div>
+
+  <div class="project reverse" id="catalog">
+    <div class="frame-col">
+      <div class="device">
+        <div class="bar"><i></i><i></i><i></i><span class="url">livingmoood-commits.github.io/Catalog</span></div>
+        <div class="screen">
+          <div class="fallback">لو العرض الحي متحملش — دوس على الزرار وشوفه لايف</div>
+          <iframe src="https://livingmoood-commits.github.io/Catalog/" loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+    <div class="text-col">
+      <span class="status">Own build · public-facing</span>
+      <h3>Catalog — واجهة العميل</h3>
+      <p class="ar">الصفحة اللي العميل بيشوفها أول ما يدخل: هوية Living Mood الفاخرة، التصنيفات والكتالوج بيتحملوا لايف، ولينكات مباشرة لواتساب وإنستجرام وتيك توك عشان العميل يقفل التواصل من نفس الصفحة من غير ما يخرج منها.</p>
+      <div class="chips"><span>HTML / CSS / JS</span><span>Dynamic content loading</span><span>Bilingual, mobile-first</span></div>
+      <a class="visit" href="https://livingmoood-commits.github.io/Catalog/" target="_blank">Open the catalog</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LABELING OPS ================= -->
+<section class="world teal" id="labeling">
+  <div class="world-head">
+    <span class="tag">Micro Engineering Tech</span>
+    <h2>Labeling Operations</h2>
+    <hr>
+  </div>
+
+  <div class="project" id="meti-dash">
+    <div class="frame-col">
+      <div class="device">
+        <div class="bar"><i></i><i></i><i></i><span class="url">me5850000-sketch.github.io/METI-Dashboard-UI</span></div>
+        <div class="screen">
+          <div class="fallback">شاشة الدخول محمية بصلاحيات — افتحها لايف للتفاصيل</div>
+          <iframe src="https://me5850000-sketch.github.io/METI-Dashboard-UI/" loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+    <div class="text-col">
+      <span class="status">Client project · operations dashboard</span>
+      <h3>METI Dashboard — مركز عمليات</h3>
+      <p class="ar">لوحة تحكم لعمليات الـ Data Labeling بتدير فريق كامل بصلاحيات متدرّجة (Admin, SM, SSV, SV, QTC, WLA)، ونظام طلب حساب وموافقة الأدمن قبل الدخول، ومتابعة حضور وأوفر تايم، وإحصائيات لايف لكل شيفت ولكل Labeler وQTC، مع فلاتر تفصيلية وAuto Reload.</p>
+      <div class="chips"><span>Google Apps Script backend</span><span>Approval-gated auth</span><span>Live auto-refresh</span></div>
+      <a class="visit" href="https://me5850000-sketch.github.io/METI-Dashboard-UI/" target="_blank">Open the dashboard</a>
+    </div>
+  </div>
+
+  <div class="project reverse" id="traker">
+    <div class="frame-col">
+      <div class="device">
+        <div class="bar"><i></i><i></i><i></i><span class="url">me5850000-sketch.github.io/meti-tracker</span></div>
+        <div class="screen">
+          <div class="fallback">لو العرض الحي متحملش — دوس على الزرار وشوفه لايف</div>
+          <iframe src="https://me5850000-sketch.github.io/meti-tracker/" loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+    <div class="text-col">
+      <span class="status">Client project · field entry tool</span>
+      <h3>Traker — فورم تسجيل الـ Tasks</h3>
+      <p class="ar">الفورم اللي كل عامل بيسجّل بيه Task خلّصه لحظة بلحظة، مع validation صارم على كل حقل (الرقم القومي 14 رقم، شكل اللينك، طول الـ Task ID) عشان يمنع الغلط قبل ما يحصل. وفيه كشف فوري لو نفس الـ Task اتبعت قبل كده بدل ما يتكرر في الداتا — الجزء ده كان شغال على Supabase وتم نقله لسيستم مبني على Google Sheets عشان يبقى أسرع وأثبت.</p>
+      <div class="chips"><span>Form validation engine</span><span>Duplicate detection</span><span>Migrated Supabase → GAS/Sheets</span></div>
+      <a class="visit" href="https://me5850000-sketch.github.io/meti-tracker/" target="_blank">Open Traker</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOW IT RUNS ================= -->
+<section class="world" id="how">
+  <div class="explainer">
+    <h2>How a Supabase-backed system like this actually runs</h2>
+    <p class="ar">مفيش سيرفر لوحده في النص — الموقع الـ Static بيتكلم مباشرة مع Supabase عن طريق مفتاح anon key محمي بصلاحيات Row Level Security. اللي بيمشي الشغل هو ثلاث حاجات:</p>
+    <div class="flow">
+      <div class="step">
+        <h4>Auth</h4>
+        <p>تسجيل الدخول وطلب الحساب بيتخزنوا في auth.users، والموافقة (Pending → Approved) بتتحكم فيها حالة في جدول profiles بيراجعها الأدمن.</p>
+      </div>
+      <div class="connector">→</div>
+      <div class="step">
+        <h4>Database</h4>
+        <p>كل Task وLabeler وسجل حضور صف في جدول Postgres. فحص "الـ Task ده اتبعت قبل كده" هو استعلام بيدور على نفس الـ ID قبل ما يعمل insert جديد.</p>
+      </div>
+      <div class="connector">→</div>
+      <div class="step">
+        <h4>Realtime</h4>
+        <p>مؤشر LIVE والـ Auto Reload بيبقوا subscription على تغييرات الجدول، أو polling كل فترة زمنية محددة (30s / 1m / 2m / 5m).</p>
+      </div>
+    </div>
+    <div class="note">
+      <b>ملاحظة مهمة:</b> من إعداد <b>APPS_SCRIPT_URL</b> الظاهر في Traker، ومن إنك نفسك نقلت فحص التكرار من Supabase لـ Google Sheets/GAS — يبقى النظام ده مش شغال بالكامل على Supabase دلوقتي، جزء منه (وممكن يكون أغلبه) بقى شغال على Apps Script. يعني اللي شفته Live أول ما فتحت اللينكات ممكن يبقى مزيج من الاتنين مش Supabase وحده.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Living Mood — designed &amp; built in-house</span>
+  <div class="socials">
+    <a href="https://www.instagram.com/livingmoood/" target="_blank">Instagram</a>
+    <a href="https://www.tiktok.com/@livingmoood" target="_blank">TikTok</a>
+  </div>
+</footer>
+
+</body>
+</html>
