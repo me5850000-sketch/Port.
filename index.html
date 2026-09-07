@@ -85,7 +85,7 @@
     transition:transform .22s ease-out, opacity .5s ease; pointer-events:none; z-index:-1;
   }
   .hero-ghost{
-    position:absolute; right:clamp(4px,2vw,32px); top:96px;
+    position:absolute; right:clamp(20px,10vw,160px); top:96px;
     font-size:clamp(160px,24vw,340px); line-height:.78; font-weight:900; letter-spacing:-0.05em;
     color:#fff; text-shadow:0 26px 60px rgba(28,26,25,0.14), 0 4px 0 rgba(28,26,25,0.04);
     user-select:none; pointer-events:none; z-index:0; animation:ghostIn 1.1s .1s cubic-bezier(.16,1,.3,1) both;
@@ -127,9 +127,9 @@
 
   section.block{ padding:0 clamp(20px,4vw,48px); }
   .inner{ max-width:1240px; margin:0 auto; }
-  .section-head{ display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:24px; padding:64px 0 30px; }
+  .section-head{ display:flex; flex-direction:column; align-items:flex-start; gap:14px; padding:64px 0 30px; }
   .section-head h2{ margin-top:16px; font-size:clamp(38px,6vw,74px); line-height:.9; letter-spacing:-0.04em; font-weight:900; text-transform:uppercase; }
-  .section-head p.en{ max-width:420px; margin:0 0 8px auto; font-size:14px; }
+  .section-head p.en{ max-width:520px; font-size:14px; }
 
   #skills{ border-top:2px solid var(--ink); border-bottom:2px solid var(--ink); }
   .section-head.bordered{ border-bottom:2px solid var(--ink); }
@@ -180,9 +180,9 @@
   .transform-title{ font-size:clamp(20px,2.6vw,26px); font-weight:800; text-transform:uppercase; letter-spacing:-0.01em; margin-bottom:6px; }
   .transform-row{ margin-bottom:38px; }
   .transform-row:last-child{ margin-bottom:0; }
-  .transform-pair{ display:flex; align-items:stretch; gap:16px; margin-bottom:14px; }
-  .transform-pair figure{ flex:1 1 0; margin:0; min-width:0; }
-  .transform-pair img{ width:100%; height:auto; max-height:520px; object-fit:contain; object-position:top; border:2px solid var(--ink); background:var(--surface); cursor:zoom-in; }
+  .transform-pair{ display:flex; flex-direction:column; align-items:stretch; gap:20px; margin-bottom:14px; }
+  .transform-pair figure{ margin:0; min-width:0; max-width:900px; }
+  .transform-pair img{ width:100%; height:auto; object-fit:contain; object-position:top; border:2px solid var(--ink); background:var(--surface); cursor:zoom-in; }
   .lightbox{
     position:fixed; inset:0; background:rgba(15,14,13,0.92); display:flex; align-items:center; justify-content:center;
     padding:28px; z-index:500; opacity:0; pointer-events:none; transition:opacity .25s ease;
@@ -190,14 +190,10 @@
   .lightbox.open{ opacity:1; pointer-events:auto; }
   .lightbox img{ max-width:96vw; max-height:92vh; width:auto; height:auto; object-fit:contain; box-shadow:0 30px 80px rgba(0,0,0,0.5); cursor:zoom-out; }
   .transform-pair figcaption{ margin-top:8px; font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--muted-2); }
-  .transform-pair .arrow{ flex:0 0 auto; align-self:center; font-size:22px; color:var(--amber); }
+  .transform-pair .arrow{ flex:0 0 auto; align-self:center; font-size:22px; color:var(--amber); transform:rotate(90deg); margin:2px 0; }
   .transform-row p.caption{ max-width:760px; font-size:14.5px; }
   .transform-list{ max-width:760px; margin:16px 0 30px; font-size:14.5px; color:var(--muted); line-height:1.9; padding-left:20px; }
   .transform-list li{ margin-bottom:6px; }
-  @media(max-width:760px){
-    .transform-pair{ flex-direction:column; }
-    .transform-pair .arrow{ transform:rotate(90deg); margin:2px 0; }
-  }
 
   .device{ background:var(--surface); border:2px solid var(--ink); box-shadow:0 20px 44px rgba(28,26,25,0.1); }
   .device-bar{ display:flex; align-items:center; gap:6px; padding:12px 14px; border-bottom:2px solid var(--line); }
@@ -344,7 +340,8 @@
         <span>Video Editing — Premiere Pro, CapCut (Beginner)</span>
         <span>Systems — Apps Script, Google Sheets, Supabase</span>
       </div>
-      <div style="margin-top:28px; display:flex; flex-wrap:wrap; gap:12px;">
+      <div class="eyebrow" style="margin-top:28px; margin-bottom:0;">Contact</div>
+      <div style="margin-top:14px; display:flex; flex-wrap:wrap; gap:12px;">
         <a class="visit" href="mailto:hazemnader1244@gmail.com"><span>hazemnader1244@gmail.com</span></a>
         <a class="visit" href="https://wa.me/201143676423" target="_blank" rel="noopener"><span>WhatsApp</span></a>
         <a class="visit" href="tel:+201143676423"><span>01143676423</span></a>
