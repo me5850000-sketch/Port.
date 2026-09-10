@@ -76,6 +76,12 @@
     transition:transform .2s, box-shadow .2s;
   }
   .cta-btn:hover{ transform:translateY(-2px); box-shadow:0 8px 18px rgba(47,95,168,0.28); }
+  .pdf-btn{
+    background:none; border:1.5px solid var(--line-strong); color:var(--ink); font:inherit;
+    font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    padding:9.5px 14px; cursor:pointer; white-space:nowrap; transition:background .2s, color .2s;
+  }
+  .pdf-btn:hover{ background:var(--ink); color:#fff; }
   @media(max-width:820px){
     nav{ gap:16px; font-size:11px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; max-width:56vw; }
     nav::-webkit-scrollbar{ display:none; }
@@ -264,6 +270,19 @@
     .brand .name{ display:none; }
     .project{ padding:48px 0; }
   }
+
+  @media print{
+    nav{ display:none !important; }
+    .page-glow, .hero-ghost{ display:none !important; }
+    html, body{ background:#fff; }
+    *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .reveal, .reveal-d1, .reveal-d2, .reveal-d3{ opacity:1 !important; transform:none !important; transition:none !important; }
+    header{ position:static; backdrop-filter:none; background:#fff; }
+    .device-screen iframe{ display:none; }
+    .device-screen:has(iframe){ display:flex; align-items:center; justify-content:center; min-height:140px; }
+    .device-screen:has(iframe)::after{ content:"Live preview — see the link above"; font-size:12px; color:var(--muted); }
+    .project, .about-card, .transform-block, .world-head, .section-head{ break-inside:avoid; }
+  }
 </style>
 </head>
 <body>
@@ -283,6 +302,7 @@
     <a href="#labeling" class="hide-sm">Labeling</a>
     <a href="#journey" class="hide-sm">Journey</a>
     <a href="#how">How it runs</a>
+    <button type="button" class="pdf-btn" onclick="window.print()">Save PDF</button>
     <a class="cta-btn" href="https://wa.me/201143676423" target="_blank" rel="noopener">Let's talk</a>
   </nav>
 </header>
