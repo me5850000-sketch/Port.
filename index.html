@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("hn.theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");}catch(e){}</script>
 <meta name="description" content="Hazem Nader — systems &amp; automation, data operations, and visual work. Google Apps Script dashboards, Supabase tools, and client-facing web builds.">
 <title>Hazem Nader — Portfolio</title>
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -320,6 +321,59 @@
     .world-head, .section-head, .text-col h3, .transform-title{ break-after:avoid; }
     .frame-col{ break-after:avoid; break-inside:avoid; }
   }
+  /* ===== Dark mode ===== */
+  :root{ --blue-lt:#4a7fd4; }
+  :root[data-theme="dark"]{
+    --bg:#121110; --surface:#1b1918; --ink:#f1efec; --muted:#a8a199; --muted-2:#7f7972;
+    --line:#35312d; --line-strong:#f1efec;
+    --blue:#74a2ea; --blue-deep:#9cbdf3; --blue-lt:#9cbdf3;
+    --amber:#d99e58; --amber-deep:#e6b47a; --red:#e5746f; --red-deep:#f09a95;
+    color-scheme:dark;
+  }
+  body{ transition:background .35s ease, color .35s ease; }
+  [data-theme="dark"] ::selection{ color:#121110; }
+  [data-theme="dark"] header{ background:rgba(18,17,16,0.9); }
+  [data-theme="dark"] .cta-btn{ color:#121110 !important; box-shadow:0 4px 10px rgba(0,0,0,0.35); }
+  [data-theme="dark"] .pdf-btn{ color:#121110; box-shadow:0 4px 10px rgba(0,0,0,0.35); }
+  [data-theme="dark"] .btn-solid{ color:#121110; box-shadow:0 12px 26px rgba(116,162,234,0.2); }
+  [data-theme="dark"] .btn-outline{ box-shadow:0 8px 20px rgba(0,0,0,0.4); }
+  [data-theme="dark"] .btn-outline:hover,
+  [data-theme="dark"] .visit:hover,
+  [data-theme="dark"] .world.amber .visit:hover,
+  [data-theme="dark"] .mock-btn,
+  [data-theme="dark"] .mock-sheet th{ color:#121110; }
+  [data-theme="dark"] .visit.whatsapp{ border-color:#3ddc84; color:#3ddc84; }
+  [data-theme="dark"] .visit.whatsapp:hover{ background:#25d366; border-color:#25d366; color:#121110; }
+  [data-theme="dark"] .scroll-progress{ background:rgba(241,239,236,0.08); }
+  [data-theme="dark"] .page-glow{ background:radial-gradient(circle, rgba(116,162,234,0.13) 0%, rgba(116,162,234,0.04) 40%, transparent 68%); }
+  [data-theme="dark"] .hero-ghost{ color:#1d1b1a; text-shadow:0 26px 60px rgba(0,0,0,0.5); }
+  [data-theme="dark"] .hero-ghost.lit{ color:var(--blue-lt); text-shadow:0 0 60px rgba(116,162,234,0.4), 0 0 140px rgba(116,162,234,0.22); }
+  [data-theme="dark"] .hero h1:hover{ text-shadow:0 0 34px rgba(116,162,234,0.35), 0 0 90px rgba(116,162,234,0.2); }
+  [data-theme="dark"] .device{ box-shadow:0 20px 44px rgba(0,0,0,0.5); }
+  [data-theme="dark"] .mock-key.hot{ background:rgba(116,162,234,0.16); }
+  [data-theme="dark"] .mock-key.hot2{ background:rgba(217,158,88,0.16); }
+  [data-theme="dark"] .timeline-row.in .yr::before{ box-shadow:0 0 0 4px rgba(116,162,234,0.18); }
+  .theme-btn{
+    flex:0 0 auto; width:40px; height:40px; display:grid; place-items:center; cursor:pointer;
+    background:var(--surface); color:var(--ink); border:2px solid var(--line);
+    transition:transform .2s, border-color .2s, color .2s;
+  }
+  .theme-btn:hover{ transform:translateY(-2px); border-color:var(--ink); color:var(--blue); }
+  .theme-btn svg{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:square; }
+  .theme-btn .sun{ display:none; }
+  [data-theme="dark"] .theme-btn .sun{ display:block; }
+  [data-theme="dark"] .theme-btn .moon{ display:none; }
+  ::view-transition-old(root), ::view-transition-new(root){ animation:none; mix-blend-mode:normal; }
+  @media print{
+    .theme-btn{ display:none !important; }
+    :root[data-theme="dark"]{
+      --bg:#f4f3f1; --surface:#ffffff; --ink:#1c1a19; --muted:#6b6560; --muted-2:#8f8a83;
+      --line:#dedbd6; --line-strong:#1c1a19; --blue:#2f5fa8; --blue-deep:#22467d; --blue-lt:#4a7fd4;
+      --amber:#a9702d; --amber-deep:#8a5b22; --red:#b23a3a; --red-deep:#8f2e2e; color-scheme:light;
+    }
+    [data-theme="dark"] .cta-btn, [data-theme="dark"] .pdf-btn, [data-theme="dark"] .btn-solid,
+    [data-theme="dark"] .mock-btn, [data-theme="dark"] .mock-sheet th{ color:#fff !important; }
+  }
 </style>
 </head>
 <body>
@@ -344,6 +398,10 @@
     <button type="button" class="pdf-btn" onclick="window.print()">Save PDF</button>
     <a class="cta-btn" href="https://wa.me/201143676423" target="_blank" rel="noopener">Let's talk</a>
   </nav>
+  <button type="button" class="theme-btn" id="themeBtn" aria-label="Switch between light and dark mode" title="Light / dark">
+    <svg class="moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>
+    <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>
+  </button>
 </header>
 
 <section class="hero-stage" id="heroStage">
@@ -835,6 +893,29 @@
   scaleDeviceIframes();
   window.addEventListener('resize', scaleDeviceIframes);
   window.addEventListener('load', scaleDeviceIframes);
+
+  // light / dark mode: follows the device until the visitor picks one, then remembers it
+  (function(){
+    var btn = document.getElementById('themeBtn');
+    var root = document.documentElement;
+    if(!btn) return;
+    function stored(){ try{ return localStorage.getItem('hn.theme'); }catch(e){ return null; } }
+    function apply(t){ root.dataset.theme = t; }
+    btn.addEventListener('click', function(e){
+      var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      try{ localStorage.setItem('hn.theme', next); }catch(err){}
+      var noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(!document.startViewTransition || noMotion){ apply(next); return; }
+      var x = e.clientX || window.innerWidth - 40, y = e.clientY || 30;
+      var r = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+      document.startViewTransition(function(){ apply(next); }).ready.then(function(){
+        root.animate({ clipPath: ['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + r + 'px at ' + x + 'px ' + y + 'px)'] },
+          { duration: 650, easing: 'cubic-bezier(.16,1,.3,1)', pseudoElement: '::view-transition-new(root)' });
+      });
+    });
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    if(mq.addEventListener) mq.addEventListener('change', function(ev){ if(!stored()) apply(ev.matches ? 'dark' : 'light'); });
+  })();
 </script>
 
 </body>
