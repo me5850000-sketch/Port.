@@ -201,7 +201,9 @@
   .project{ max-width:1240px; margin:0 auto; padding:64px 0; border-bottom:2px solid var(--line); display:flex; flex-direction:column; gap:36px; }
   .project:last-child{ border-bottom:none; }
   /* wide showcase: big live preview, details underneath */
-  .project.wide{ flex-direction:column !important; align-items:stretch !important; gap:40px; max-width:1040px; }
+  .project.wide{ flex-direction:column !important; align-items:stretch !important; gap:40px; }
+  .project.wide .device-screen{ aspect-ratio:2/1; }
+  @media(max-width:700px){ .project.wide .device-screen{ aspect-ratio:16/10; } }
   .project.wide .frame-col, .project.wide .text-col{ flex:none; width:100%; }
   .project.wide .device{ box-shadow:0 40px 80px -30px rgba(28,26,25,0.35); }
   .project.wide .text-col{ display:grid; gap:20px 64px; align-items:start; }
@@ -1018,7 +1020,7 @@
       if(!cw) return;
       var scale = cw / VIRTUAL_W;
       f.style.width = VIRTUAL_W + 'px';
-      f.style.height = VIRTUAL_H + 'px';
+      f.style.height = Math.ceil((f.parentElement.clientHeight || cw*VIRTUAL_H/VIRTUAL_W) / scale) + 'px';
       f.style.transform = 'scale(' + scale + ')';
     });
   }
