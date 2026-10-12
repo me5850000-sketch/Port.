@@ -1152,7 +1152,15 @@
     function stop(){ clearInterval(timer); timer=null; btns.forEach(function(b){ b.classList.remove('run'); }); }
     btns.forEach(function(b,k){ b.addEventListener('click',function(){ fl.classList.add('touched'); stop(); go(k,false); }); });
     go(0,false);
-    if('IntersectionObserver' in window){ new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting&&!seen&&!fl.classList.contains('touched')){ seen=true; auto(); } if(!e.isIntersecting) stop(); }); },{threshold:.4}).observe(fl); } else auto();
+    // start only once the screenshot frame itself is properly on screen; reset to step 1 when it leaves
+    var frame=fl.querySelector('.device'), delay=null;
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(es){ es.forEach(function(e){
+        if(fl.classList.contains('touched')) return;
+        if(e.isIntersecting){ clearTimeout(delay); delay=setTimeout(function(){ go(0,false); auto(); },700); }
+        else { clearTimeout(delay); stop(); go(0,false); }
+      }); },{threshold:.8, rootMargin:'-10% 0px -10% 0px'}).observe(frame);
+    }
   });
 })();
 </script>
