@@ -613,18 +613,7 @@
         <div class="device">
           <div class="device-bar"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url">me5850000-sketch.github.io/METI-Dashboard-UI</span></div>
           <div class="device-screen">
-            <div class="mock">
-              <div class="mock-fill">
-                <div class="mock-card">
-                  <h5>METI Operations</h5>
-                  <div class="sub">Request access &middot; awaiting admin approval</div>
-                  <div class="mock-field">EMP-30871</div>
-                  <div class="mock-field">SV — Shift 2</div>
-                  <div class="mock-btn">Request account</div>
-                  <div class="mock-chiprow"><span class="mock-chip">Admin</span><span class="mock-chip">SM</span><span class="mock-chip">SSV</span><span class="mock-chip">SV</span><span class="mock-chip">QTC</span><span class="mock-chip">WLA</span></div>
-                </div>
-              </div>
-            </div>
+            <iframe src="https://me5850000-sketch.github.io/METI-Dashboard-UI/" loading="lazy" scrolling="yes"></iframe>
           </div>
         </div>
       </div>
@@ -637,7 +626,7 @@
           <p class="en">An operations dashboard for Data Labeling that runs a full team across tiered roles (Admin, SM, SSV, SV, QTC, WLA), with an account-request flow gated behind admin approval. Every call from the UI passes through a whitelist of allowed functions, so nothing internal can be triggered by name alone. Stats are read from an external Google Sheet and cached for 90 seconds in a chunked cache (the payload is bigger than a single cache slot), keyed to a schema version — so any change to the sheet's columns invalidates old cache instantly instead of quietly returning misaligned data. Attendance and overtime are computed from three shift sheets plus an external Queue sheet, feeding a daily report for the supervisor and shift manager, with one-click export to a fresh Google Sheet.</p>
           <div class="chips"><span>Google Apps Script backend</span><span>Whitelisted RPC endpoints</span><span>Chunked, versioned caching</span><span>Attendance &amp; OT reporting</span><span>One-click Sheet export</span></div>
           <a class="visit" href="https://me5850000-sketch.github.io/METI-Dashboard-UI/" target="_blank" rel="noopener"><span>Open the dashboard</span></a>
-          <div class="mockup-note en">The screen above is a mockup in the system's real colors with fixed placeholder data for display only — not a live login. The "Open the dashboard" button takes you to the real system, which requires an actual approved account.</div>
+          <div class="mockup-note en">The real system needs an approved account. Press "Try the demo — sample data" on the sign-in screen to open the full dashboard with made-up numbers; nothing is saved and no real data is shown.</div>
         </div>
       </div>
     </div>
