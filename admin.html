@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Portfolio Admin</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("hn.theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");}catch(e){}</script>
+<style>
+  :root{
+    --bg:#f4f3f1; --surface:#ffffff; --ink:#1c1a19; --muted:#6b6560; --muted-2:#8f8a83; --line:#dedbd6;
+    --blue:#2f5fa8; --amber:#a9702d; --red:#b23a3a; --green:#2e7d4f;
+    --font:"Archivo","Noto Kufi Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
+    color-scheme:light;
+  }
+  :root[data-theme="dark"]{
+    --bg:#121110; --surface:#1b1918; --ink:#f1efec; --muted:#a8a199; --muted-2:#7f7972; --line:#2f2c2a;
+    --blue:#74a2ea; --amber:#d39a55; --red:#e07070; --green:#5cc28a; color-scheme:dark;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  button,input,select,textarea{font:inherit;color:inherit}
+  :focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  [hidden]{display:none!important}
+
+  /* top bar */
+  .top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:14px clamp(16px,3vw,32px);background:var(--bg);border-bottom:2px solid var(--ink)}
+  .mark{display:grid;place-items:center;width:34px;height:34px;background:var(--ink);color:var(--bg);font-weight:900;font-size:13px;letter-spacing:-.02em}
+  .top h1{font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:.04em}
+  .top .grow{flex:1}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 16px;border:2px solid var(--ink);background:var(--surface);font-weight:800;font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;text-decoration:none;color:var(--ink);transition:background .2s,color .2s,transform .2s}
+  .btn:hover{background:var(--ink);color:var(--bg)}
+  .btn.solid{background:var(--ink);color:var(--bg)}
+  .btn.solid:hover{background:var(--amber);border-color:var(--amber);color:#fff}
+  .btn.ghost{border-color:var(--line);background:transparent}
+  .btn.ghost:hover{border-color:var(--ink);background:transparent;color:var(--ink)}
+  .btn.danger{border-color:var(--red);color:var(--red);background:transparent}
+  .btn.danger:hover{background:var(--red);color:#fff}
+  .btn:disabled{opacity:.5;cursor:default}
+  .who{font-size:12.5px;color:var(--muted)}
+
+  /* login */
+  .login{min-height:calc(100% - 66px);display:grid;place-items:center;padding:40px 16px}
+  .login form{width:100%;max-width:380px;background:var(--surface);border:2px solid var(--ink);padding:28px;display:grid;gap:14px;box-shadow:0 24px 50px -28px rgba(0,0,0,.4)}
+  .login h2{font-size:24px;font-weight:900;text-transform:uppercase;letter-spacing:-.02em}
+  .login p{color:var(--muted);font-size:14px}
+
+  /* layout */
+  .app{display:grid;grid-template-columns:330px minmax(0,1fr);min-height:calc(100% - 66px)}
+  .side{border-right:2px solid var(--line);padding:20px clamp(14px,2vw,22px);display:flex;flex-direction:column;gap:18px;min-width:0}
+  .side-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .side-actions .btn{flex:1}
+  .sec{border:2px solid var(--line);background:var(--surface)}
+  .sec-h{display:flex;align-items:center;gap:8px;padding:10px 10px 10px 12px;border-bottom:2px solid var(--line);cursor:pointer}
+  .sec-h .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);flex:none}
+  .sec-h.amber .dot{background:var(--amber)}
+  .sec-h b{flex:1;min-width:0;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sec-h.sel{background:var(--bg)}
+  .items{list-style:none}
+  .item{display:flex;align-items:center;gap:6px;padding:8px 8px 8px 12px;border-top:1px solid var(--line);cursor:pointer;transition:background .15s}
+  .item:first-child{border-top:0}
+  .item:hover{background:var(--bg)}
+  .item.sel{background:var(--bg);box-shadow:inset 3px 0 0 var(--amber)}
+  .item span{flex:1;min-width:0;font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .item.hiddenp span{color:var(--muted-2);text-decoration:line-through}
+  .mv{display:inline-grid;place-items:center;width:26px;height:26px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:12px;color:var(--muted)}
+  .mv:hover{border-color:var(--ink);color:var(--ink)}
+  .mv:disabled{opacity:.3;cursor:default}
+  .empty-sec{padding:10px 12px;font-size:12.5px;color:var(--muted-2)}
+
+  .main{padding:24px clamp(16px,3vw,40px) 80px;min-width:0}
+  .main-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+  .ed-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+  .ed-title h2{font-size:26px;font-weight:900;text-transform:uppercase;letter-spacing:-.02em;flex:1;min-width:0}
+  .form{display:grid;gap:16px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .field{display:grid;gap:6px;min-width:0}
+  .field label{font-size:11.5px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .field .hint{font-size:12px;color:var(--muted-2)}
+  input[type=text],input[type=url],input[type=email],input[type=password],select,textarea{width:100%;padding:10px 12px;border:2px solid var(--line);background:var(--surface);border-radius:0;transition:border-color .2s}
+  input:focus,select:focus,textarea:focus{border-color:var(--ink);outline:none}
+  textarea{resize:vertical;min-height:90px;line-height:1.55}
+  textarea.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;min-height:120px}
+  .seg{display:flex;border:2px solid var(--line);background:var(--surface)}
+  .seg button{flex:1;padding:9px 10px;border:0;background:transparent;cursor:pointer;font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+  .seg button+button{border-left:2px solid var(--line)}
+  .seg button.on{background:var(--ink);color:var(--bg)}
+  .chips-in{display:flex;flex-wrap:wrap;gap:6px;padding:8px;border:2px solid var(--line);background:var(--surface);min-height:46px;align-items:center}
+  .chips-in:focus-within{border-color:var(--ink)}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:4px 6px 4px 10px;border:1px solid var(--line);background:var(--bg);font-size:13px;font-weight:600}
+  .chip button{border:0;background:none;cursor:pointer;color:var(--muted);font-size:14px;line-height:1;padding:0 2px}
+  .chip button:hover{color:var(--red)}
+  .chips-in input{flex:1;min-width:140px;border:0;padding:4px;background:transparent}
+  .chips-in input:focus{outline:none}
+  .switch{display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:700;font-size:14px}
+  .switch input{appearance:none;width:42px;height:24px;border-radius:999px;background:var(--line);position:relative;cursor:pointer;transition:background .2s;flex:none}
+  .switch input::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--surface);transition:transform .2s}
+  .switch input:checked{background:var(--green)}
+  .switch input:checked::after{transform:translateX(18px)}
+  details.adv{border:2px dashed var(--line);padding:12px 14px}
+  details.adv summary{cursor:pointer;font-weight:800;font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  details.adv[open] summary{margin-bottom:12px}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;padding-top:6px;border-top:2px solid var(--line);margin-top:4px;padding-top:16px}
+  .actions .grow{flex:1}
+  .upload{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .thumb{width:100%;aspect-ratio:2/1;object-fit:cover;object-position:top;border:2px solid var(--line);background:var(--bg)}
+
+  /* preview */
+  .pv{position:sticky;top:88px;display:grid;gap:12px}
+  .pv-label{font-size:11.5px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .device{background:var(--surface);border:2px solid var(--ink);box-shadow:0 20px 44px -24px rgba(0,0,0,.35)}
+  .device-bar{display:flex;align-items:center;gap:6px;padding:9px 12px;border-bottom:1px solid var(--line)}
+  .device-dot{width:8px;height:8px;border-radius:50%;background:var(--line)}
+  .device-url{margin-left:8px;font-size:11.5px;font-weight:700;color:var(--muted-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .screen{position:relative;aspect-ratio:2/1;overflow:hidden;background:var(--bg)}
+  .screen iframe{position:absolute;top:0;left:0;border:0;transform-origin:top left;pointer-events:none}
+  .screen img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
+  .screen .none{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted-2);font-size:13px;font-weight:700}
+  .pv-text{display:grid;gap:10px;padding:4px 2px}
+  .pv-tag{justify-self:start;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:5px 10px;border:1.5px solid var(--blue);color:var(--blue)}
+  .pv-tag.amber{border-color:var(--amber);color:var(--amber)}
+  .pv-h{font-size:26px;font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:1}
+  .pv-k{font-size:13px;color:var(--muted)}
+  .pv-d p{font-size:14px;color:var(--muted);margin-bottom:8px}
+  .pv-chips{display:flex;flex-wrap:wrap;gap:6px}
+  .pv-chips span{font-size:12px;font-weight:700;padding:4px 9px;border:1px solid var(--line);background:var(--surface)}
+  .pv-btn{justify-self:start;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:10px 16px;border:2px solid var(--blue);color:var(--blue)}
+  .pv-btn.amber{border-color:var(--amber);color:var(--amber)}
+  .pv-note{font-size:12.5px;color:var(--muted-2);font-style:italic}
+
+  .welcome{max-width:560px;padding:40px 0;display:grid;gap:14px}
+  .welcome h2{font-size:30px;font-weight:900;text-transform:uppercase;letter-spacing:-.02em}
+  .welcome p{color:var(--muted)}
+
+  /* confirm + toast */
+  .modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
+  .modal .box{background:var(--surface);border:2px solid var(--ink);padding:24px;max-width:420px;width:100%;display:grid;gap:14px}
+  .modal h3{font-size:18px;font-weight:900;text-transform:uppercase}
+  .modal p{color:var(--muted);font-size:14px}
+  .modal .row{display:flex;gap:10px;justify-content:flex-end}
+  .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);opacity:0;z-index:60;background:var(--ink);color:var(--bg);padding:12px 18px;font-weight:700;font-size:14px;transition:opacity .25s,transform .25s;pointer-events:none;max-width:calc(100% - 32px)}
+  .toast.show{opacity:1;transform:translateX(-50%)}
+  .toast.err{background:var(--red);color:#fff}
+  .err-msg{color:var(--red);font-size:13.5px;font-weight:700}
+
+  @media(max-width:1100px){ .main-grid{grid-template-columns:1fr} .pv{position:static} }
+  @media(max-width:820px){
+    .app{grid-template-columns:1fr}
+    .side{border-right:0;border-bottom:2px solid var(--line)}
+    .row2{grid-template-columns:1fr}
+    .top .who{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="mark">HN</span>
+  <h1>Portfolio Admin</h1>
+  <span class="grow"></span>
+  <span class="who" id="who"></span>
+  <a class="btn ghost" href="./" target="_blank" rel="noopener">View portfolio</a>
+  <button class="btn ghost" id="themeBtn" type="button" aria-label="Switch theme">Theme</button>
+  <button class="btn" id="logoutBtn" type="button" hidden>Sign out</button>
+</header>
+
+<!-- LOGIN -->
+<section class="login" id="loginView" hidden>
+  <form id="loginForm">
+    <h2>Sign in</h2>
+    <p>Use the same account as the Recharge admin.</p>
+    <div class="field"><label for="lEmail">Email</label><input type="email" id="lEmail" autocomplete="username" required></div>
+    <div class="field"><label for="lPass">Password</label><input type="password" id="lPass" autocomplete="current-password" required></div>
+    <div class="err-msg" id="loginErr" hidden></div>
+    <button class="btn solid" type="submit" id="loginBtn">Sign in</button>
+  </form>
+</section>
+
+<!-- APP -->
+<div class="app" id="appView" hidden>
+  <aside class="side">
+    <div class="side-actions">
+      <button class="btn solid" type="button" id="newProjectBtn">+ Project</button>
+      <button class="btn" type="button" id="newSectionBtn">+ Section</button>
+    </div>
+    <div id="tree"></div>
+  </aside>
+
+  <main class="main">
+    <div class="welcome" id="welcome">
+      <h2>Your work, without code</h2>
+      <p>Pick a project on the left to edit it, or press <b>+ Project</b> to add a new one. Paste the live link, write the text, save, and it shows up on the portfolio in the same style as the others.</p>
+      <p>Use the arrows to change the order. Hidden projects stay here but don't show on the site.</p>
+    </div>
+
+    <!-- PROJECT EDITOR -->
+    <div id="projectEditor" hidden>
+      <div class="ed-title"><h2 id="pTitleHead">New project</h2><label class="switch"><input type="checkbox" id="pVisible" checked> Visible on site</label></div>
+      <div class="main-grid">
+        <form class="form" id="pForm" autocomplete="off">
+          <div class="row2">
+            <div class="field"><label for="pSection">Section</label><select id="pSection"></select></div>
+            <div class="field"><label for="pTag">Tag</label><input type="text" id="pTag" placeholder="Client project · web design"></div>
+          </div>
+          <div class="field"><label for="pTitle">Title</label><textarea id="pTitle" rows="2" style="min-height:60px" placeholder="Project name — what it is" required></textarea><span class="hint">Press Enter for a second line.</span></div>
+          <div class="field"><label for="pKicker">Short line under the title</label><input type="text" id="pKicker" placeholder="Optional · who it's for, in one line"></div>
+          <div class="field"><label for="pDesc">Description</label><textarea id="pDesc" rows="6" placeholder="What it does, who uses it, what problem it solves."></textarea><span class="hint">Leave an empty line between paragraphs.</span></div>
+          <div class="field"><label for="pChipInput">Chips</label>
+            <div class="chips-in" id="pChips"><input type="text" id="pChipInput" placeholder="Type and press Enter"></div>
+          </div>
+          <div class="field"><label for="pUrl">Live link</label><input type="url" id="pUrl" placeholder="https://username.github.io/project/"></div>
+          <div class="row2">
+            <div class="field"><label for="pUrlLabel">Address bar text</label><input type="text" id="pUrlLabel" placeholder="Filled from the link"></div>
+            <div class="field"><label for="pBtn">Button text</label><input type="text" id="pBtn" placeholder="Open the site"></div>
+          </div>
+          <div class="field"><label>Preview</label>
+            <div class="seg" id="pPreviewSeg"><button type="button" data-v="iframe">Live site</button><button type="button" data-v="image">Screenshot</button><button type="button" data-v="none">None</button></div>
+          </div>
+          <div class="field" id="pImageField" hidden><label for="pImage">Screenshot</label>
+            <div class="upload"><input type="url" id="pImage" placeholder="https://… or upload" style="flex:1;min-width:200px"><label class="btn" for="pImageFile" style="cursor:pointer">Upload</label><input type="file" id="pImageFile" accept="image/*" hidden></div>
+          </div>
+          <div class="field"><label for="pNote">Note under the button</label><textarea id="pNote" rows="2" style="min-height:60px" placeholder="Optional · e.g. how to open the demo"></textarea></div>
+          <details class="adv"><summary>Advanced</summary>
+            <div class="form">
+              <div class="field"><label for="pSlug">Link name (#anchor)</label><input type="text" id="pSlug" placeholder="made from the title"></div>
+              <div class="field"><label for="pExtra">Extra HTML under the card</label><textarea class="code" id="pExtra" placeholder="Optional · custom blocks like the system map"></textarea></div>
+            </div>
+          </details>
+          <div class="actions">
+            <button class="btn solid" type="submit" id="pSave">Save</button>
+            <button class="btn ghost" type="button" id="pCancel">Cancel</button>
+            <span class="grow"></span>
+            <button class="btn danger" type="button" id="pDelete">Delete</button>
+          </div>
+        </form>
+
+        <div class="pv">
+          <span class="pv-label">Preview</span>
+          <div class="device" id="pvDevice">
+            <div class="device-bar"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url" id="pvUrl"></span></div>
+            <div class="screen" id="pvScreen"></div>
+          </div>
+          <div class="pv-text">
+            <span class="pv-tag" id="pvTag"></span>
+            <div class="pv-h" id="pvTitle"></div>
+            <div class="pv-k" id="pvKicker"></div>
+            <div class="pv-d" id="pvDesc"></div>
+            <div class="pv-chips" id="pvChips"></div>
+            <span class="pv-btn" id="pvBtn"></span>
+            <div class="pv-note" id="pvNote"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION EDITOR -->
+    <div id="sectionEditor" hidden>
+      <div class="ed-title"><h2 id="sTitleHead">New section</h2><label class="switch"><input type="checkbox" id="sVisible" checked> Visible on site</label></div>
+      <form class="form" id="sForm" style="max-width:560px" autocomplete="off">
+        <div class="field"><label for="sTitle">Title</label><input type="text" id="sTitle" placeholder="Web Design" required></div>
+        <div class="field"><label for="sEyebrow">Small line above the title</label><input type="text" id="sEyebrow" placeholder="Client sites"></div>
+        <div class="field"><label>Color</label>
+          <div class="seg" id="sAccentSeg"><button type="button" data-v="blue">Blue</button><button type="button" data-v="amber">Amber</button></div>
+        </div>
+        <div class="field"><label for="sKey">Link name (#anchor)</label><input type="text" id="sKey" placeholder="made from the title"></div>
+        <div class="actions">
+          <button class="btn solid" type="submit">Save</button>
+          <button class="btn ghost" type="button" id="sCancel">Cancel</button>
+          <span class="grow"></span>
+          <button class="btn danger" type="button" id="sDelete">Delete</button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+  var SB_URL='https://mlncwxzugxjulxxuhmsd.supabase.co';
+  var SB_KEY='sb_publishable_RtZHLhzm4qLWYbIGIU54Eg_Schs3Nxy';
+  var sb=window.supabase.createClient(SB_URL,SB_KEY);
+  var $=function(id){return document.getElementById(id);};
+  var state={sections:[],projects:[],sel:null,selType:null,chips:[],preview:'iframe',accent:'blue',dirty:false};
+
+  /* ---------- helpers ---------- */
+  function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function slugify(t){return String(t||'').toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g,'').trim().replace(/[\s_]+/g,'-').replace(/-+/g,'-').slice(0,48)||('item-'+Date.now().toString(36));}
+  function urlLabel(u){return String(u||'').replace(/^https?:\/\//,'').replace(/\/$/,'');}
+  var tt;
+  function toast(msg,err){var t=$('toast');t.textContent=msg;t.className='toast show'+(err?' err':'');clearTimeout(tt);tt=setTimeout(function(){t.className='toast'+(err?' err':'');},2600);}
+  function confirmBox(title,text,okLabel){
+    return new Promise(function(res){
+      var m=document.createElement('div');m.className='modal';
+      m.innerHTML='<div class="box" role="dialog" aria-modal="true"><h3>'+esc(title)+'</h3><p>'+esc(text)+'</p><div class="row"><button class="btn ghost" type="button" data-a="0">Cancel</button><button class="btn danger" type="button" data-a="1">'+esc(okLabel||'Delete')+'</button></div></div>';
+      function done(v){document.removeEventListener('keydown',kd);m.remove();res(v);}
+      function kd(e){if(e.key==='Escape')done(false);}
+      m.addEventListener('click',function(e){var a=e.target.getAttribute('data-a');if(a!==null)done(a==='1');else if(e.target===m)done(false);});
+      document.addEventListener('keydown',kd);document.body.appendChild(m);m.querySelector('[data-a="0"]').focus();
+    });
+  }
+  function show(view){['loginView','appView'].forEach(function(v){$(v).hidden=v!==view;});$('logoutBtn').hidden=view!=='appView';}
+
+  /* ---------- theme ---------- */
+  $('themeBtn').addEventListener('click',function(){var r=document.documentElement,n=r.dataset.theme==='dark'?'light':'dark';r.dataset.theme=n;try{localStorage.setItem('hn.theme',n);}catch(e){}});
+
+  /* ---------- auth ---------- */
+  async function boot(){
+    var s=await sb.auth.getSession();
+    if(s.data&&s.data.session) return enter(s.data.session);
+    show('loginView');
+  }
+  async function enter(session){
+    var r=await sb.rpc('is_portfolio_admin');
+    if(r.error||!r.data){await sb.auth.signOut();show('loginView');var e=$('loginErr');e.textContent='This account is not allowed to edit the portfolio.';e.hidden=false;return;}
+    $('who').textContent=session.user.email;
+    show('appView');
+    await load();
+  }
+  $('loginForm').addEventListener('submit',async function(e){
+    e.preventDefault();var b=$('loginBtn'),er=$('loginErr');er.hidden=true;b.disabled=true;b.textContent='Signing in…';
+    var r=await sb.auth.signInWithPassword({email:$('lEmail').value.trim(),password:$('lPass').value});
+    b.disabled=false;b.textContent='Sign in';
+    if(r.error){er.textContent=r.error.message==='Invalid login credentials'?'Wrong email or password.':r.error.message;er.hidden=false;return;}
+    enter(r.data.session);
+  });
+  $('logoutBtn').addEventListener('click',async function(){await sb.auth.signOut();location.reload();});
+
+  /* ---------- data ---------- */
+  async function load(){
+    var a=await sb.from('portfolio_sections').select('*').order('sort').order('created_at');
+    var b=await sb.from('portfolio_projects').select('*').order('sort').order('updated_at');
+    if(a.error||b.error){toast('Could not load: '+(a.error||b.error).message,true);return;}
+    state.sections=a.data;state.projects=b.data;renderTree();
+  }
+  function projectsOf(sid){return state.projects.filter(function(p){return p.section_id===sid;}).sort(function(x,y){return x.sort-y.sort;});}
+
+  /* ---------- sidebar ---------- */
+  function renderTree(){
+    var h='';
+    state.sections.forEach(function(s,si){
+      var ps=projectsOf(s.id);
+      h+='<div class="sec"><div class="sec-h'+(s.accent==='amber'?' amber':'')+(state.selType==='section'&&state.sel===s.id?' sel':'')+'" data-sec="'+s.id+'"><span class="dot"></span><b'+(s.visible?'':' style="opacity:.5"')+'>'+esc(s.title)+'</b>'
+        +'<button class="mv" type="button" data-smv="-1" data-id="'+s.id+'" aria-label="Move section up"'+(si===0?' disabled':'')+'>&uarr;</button>'
+        +'<button class="mv" type="button" data-smv="1" data-id="'+s.id+'" aria-label="Move section down"'+(si===state.sections.length-1?' disabled':'')+'>&darr;</button></div><ul class="items">';
+      if(!ps.length) h+='<li class="empty-sec">No projects yet</li>';
+      ps.forEach(function(p,pi){
+        h+='<li class="item'+(state.selType==='project'&&state.sel===p.id?' sel':'')+(p.visible?'':' hiddenp')+'" data-pid="'+p.id+'"><span>'+esc(p.title.replace(/\n/g,' '))+'</span>'
+          +'<button class="mv" type="button" data-pmv="-1" data-id="'+p.id+'" aria-label="Move up"'+(pi===0?' disabled':'')+'>&uarr;</button>'
+          +'<button class="mv" type="button" data-pmv="1" data-id="'+p.id+'" aria-label="Move down"'+(pi===ps.length-1?' disabled':'')+'>&darr;</button></li>';
+      });
+      h+='</ul></div>';
+    });
+    if(!state.sections.length) h='<p class="empty-sec">Add a section first, then your projects.</p>';
+    $('tree').innerHTML=h;
+  }
+  $('tree').addEventListener('click',function(e){
+    var mv=e.target.closest('[data-pmv],[data-smv]');
+    if(mv){e.stopPropagation();if(mv.hasAttribute('data-pmv'))moveProject(mv.dataset.id,+mv.dataset.pmv);else moveSection(mv.dataset.id,+mv.dataset.smv);return;}
+    var it=e.target.closest('[data-pid]');if(it)return openProject(it.dataset.pid);
+    var sh=e.target.closest('[data-sec]');if(sh)return openSection(sh.dataset.sec);
+  });
+
+  async function swapSort(table,list,id,dir){
+    var i=list.findIndex(function(x){return x.id===id;}),j=i+dir;if(i<0||j<0||j>=list.length)return;
+    list.forEach(function(x,k){x.sort=k*10;});
+    var a=list[i],b=list[j],t=a.sort;a.sort=b.sort;b.sort=t;
+    renderTree();
+    var r1=await sb.from(table).update({sort:a.sort}).eq('id',a.id),r2=await sb.from(table).update({sort:b.sort}).eq('id',b.id);
+    // keep the other rows' normalised order too
+    var rest=list.filter(function(x){return x!==a&&x!==b;});
+    await Promise.all(rest.map(function(x){return sb.from(table).update({sort:x.sort}).eq('id',x.id);}));
+    if(r1.error||r2.error){toast('Order not saved',true);await load();}
+    else{state.sections.sort(function(x,y){return x.sort-y.sort;});renderTree();toast('Order saved');}
+  }
+  function moveProject(id,dir){var p=state.projects.find(function(x){return x.id===id;});swapSort('portfolio_projects',projectsOf(p.section_id),id,dir);}
+  function moveSection(id,dir){swapSort('portfolio_sections',state.sections.slice().sort(function(x,y){return x.sort-y.sort;}),id,dir);}
+
+  /* ---------- project editor ---------- */
+  function editorsOff(){$('welcome').hidden=true;$('projectEditor').hidden=true;$('sectionEditor').hidden=true;}
+  function fillSectionSelect(sel){$('pSection').innerHTML=state.sections.map(function(s){return '<option value="'+s.id+'"'+(s.id===sel?' selected':'')+'>'+esc(s.title)+'</option>';}).join('');}
+  function setPreviewType(v){state.preview=v;[].forEach.call($('pPreviewSeg').children,function(b){b.classList.toggle('on',b.dataset.v===v);});$('pImageField').hidden=v!=='image';updatePreview();}
+  function renderChips(){
+    var box=$('pChips'),inp=$('pChipInput');
+    [].slice.call(box.querySelectorAll('.chip')).forEach(function(c){c.remove();});
+    state.chips.forEach(function(c,i){var el=document.createElement('span');el.className='chip';el.innerHTML=esc(c)+'<button type="button" aria-label="Remove '+esc(c)+'" data-ci="'+i+'">&times;</button>';box.insertBefore(el,inp);});
+    updatePreview();
+  }
+  $('pChips').addEventListener('click',function(e){var b=e.target.closest('[data-ci]');if(b){state.chips.splice(+b.dataset.ci,1);renderChips();}else $('pChipInput').focus();});
+  $('pChipInput').addEventListener('keydown',function(e){
+    var v=this.value.trim();
+    if((e.key==='Enter'||e.key===',')&&v){e.preventDefault();v.split(',').forEach(function(x){x=x.trim();if(x)state.chips.push(x);});this.value='';renderChips();}
+    else if(e.key==='Enter')e.preventDefault();
+    else if(e.key==='Backspace'&&!this.value&&state.chips.length){state.chips.pop();renderChips();}
+  });
+  $('pChipInput').addEventListener('blur',function(){var v=this.value.trim();if(v){state.chips.push(v);this.value='';renderChips();}});
+  $('pPreviewSeg').addEventListener('click',function(e){var b=e.target.closest('[data-v]');if(b)setPreviewType(b.dataset.v);});
+
+  function openProject(id,sectionId){
+    var p=id?state.projects.find(function(x){return x.id===id;}):null;
+    if(!state.sections.length){toast('Add a section first',true);return openSection(null);}
+    editorsOff();$('projectEditor').hidden=false;
+    state.selType='project';state.sel=p?p.id:null;renderTree();
+    fillSectionSelect(p?p.section_id:(sectionId||state.sections[0].id));
+    $('pTitleHead').textContent=p?'Edit project':'New project';
+    $('pVisible').checked=p?p.visible:true;
+    $('pTag').value=p?p.status_tag:'';
+    $('pTitle').value=p?p.title:'';
+    $('pKicker').value=p?p.kicker:'';
+    $('pDesc').value=p?p.description:'';
+    $('pUrl').value=p?p.live_url:'';
+    $('pUrlLabel').value=p?p.url_label:'';
+    $('pBtn').value=p?p.button_label:'Open the site';
+    $('pImage').value=p?p.image_url:'';
+    $('pNote').value=p?p.note:'';
+    $('pSlug').value=p?p.slug:'';
+    $('pExtra').value=p?p.extra_html:'';
+    $('pDelete').hidden=!p;
+    state.chips=p?(p.chips||[]).slice():[];renderChips();
+    setPreviewType(p?p.preview_type:'iframe');
+    lastFrameUrl=null;updatePreview(true);
+    window.scrollTo({top:0,behavior:'smooth'});
+    if(!p) $('pTitle').focus();
+  }
+  $('newProjectBtn').addEventListener('click',function(){var cur=state.selType==='section'?state.sel:null;openProject(null,cur);});
+  $('pCancel').addEventListener('click',function(){editorsOff();$('welcome').hidden=false;state.sel=null;state.selType=null;renderTree();});
+
+  $('pForm').addEventListener('submit',async function(e){
+    e.preventDefault();
+    var title=$('pTitle').value.trim();if(!title){toast('Add a title',true);$('pTitle').focus();return;}
+    var url=$('pUrl').value.trim();
+    if(url&&!/^https?:\/\//i.test(url)){toast('The live link must start with https://',true);$('pUrl').focus();return;}
+    var sid=$('pSection').value,editing=state.sel?state.projects.find(function(x){return x.id===state.sel;}):null;
+    var row={
+      section_id:sid,status_tag:$('pTag').value.trim(),title:title,kicker:$('pKicker').value.trim(),
+      description:$('pDesc').value.trim(),chips:state.chips.slice(),live_url:url,url_label:$('pUrlLabel').value.trim()||urlLabel(url),
+      preview_type:state.preview,image_url:$('pImage').value.trim(),button_label:$('pBtn').value.trim()||'Open the site',
+      note:$('pNote').value.trim(),extra_html:$('pExtra').value,visible:$('pVisible').checked,
+      slug:slugify($('pSlug').value.trim()||title.split('\n')[0].split('—')[0])
+    };
+    if(!editing||editing.section_id!==sid){var sib=projectsOf(sid);row.sort=sib.length?sib[sib.length-1].sort+10:0;}
+    var b=$('pSave');b.disabled=true;b.textContent='Saving…';
+    var r=editing?await sb.from('portfolio_projects').update(row).eq('id',editing.id).select().single()
+                 :await sb.from('portfolio_projects').insert(row).select().single();
+    if(r.error&&/duplicate key/i.test(r.error.message)){row.slug=row.slug+'-'+Date.now().toString(36).slice(-4);r=editing?await sb.from('portfolio_projects').update(row).eq('id',editing.id).select().single():await sb.from('portfolio_projects').insert(row).select().single();}
+    b.disabled=false;b.textContent='Save';
+    if(r.error){toast('Not saved: '+r.error.message,true);return;}
+    if(editing)Object.assign(editing,r.data);else state.projects.push(r.data);
+    state.sel=r.data.id;$('pSlug').value=r.data.slug;$('pDelete').hidden=false;$('pTitleHead').textContent='Edit project';
+    renderTree();toast(editing?'Saved — live on the portfolio':'Added to the portfolio');
+  });
+
+  $('pDelete').addEventListener('click',async function(){
+    var p=state.projects.find(function(x){return x.id===state.sel;});if(!p)return;
+    if(!await confirmBox('Delete project','"'+p.title.replace(/\n/g,' ')+'" will be removed from the portfolio. This cannot be undone.'))return;
+    var r=await sb.from('portfolio_projects').delete().eq('id',p.id);
+    if(r.error){toast('Not deleted: '+r.error.message,true);return;}
+    state.projects=state.projects.filter(function(x){return x.id!==p.id;});
+    editorsOff();$('welcome').hidden=false;state.sel=null;state.selType=null;renderTree();toast('Deleted');
+  });
+
+  /* screenshot upload */
+  $('pImageFile').addEventListener('change',async function(){
+    var f=this.files&&this.files[0];if(!f)return;
+    if(f.size>8*1024*1024){toast('Image is over 8 MB',true);return;}
+    toast('Uploading…');
+    var ext=(f.name.split('.').pop()||'png').toLowerCase().replace(/[^a-z0-9]/g,'');
+    var path='shots/'+Date.now().toString(36)+'-'+slugify(f.name.replace(/\.[^.]+$/,''))+'.'+ext;
+    var r=await sb.storage.from('portfolio').upload(path,f,{cacheControl:'31536000',upsert:false,contentType:f.type});
+    this.value='';
+    if(r.error){toast('Upload failed: '+r.error.message,true);return;}
+    $('pImage').value=sb.storage.from('portfolio').getPublicUrl(path).data.publicUrl;
+    updatePreview();toast('Uploaded — press Save');
+  });
+
+  /* live preview */
+  var lastFrameUrl=null,pvTimer;
+  function scaleFrame(){var f=$('pvScreen').querySelector('iframe');if(!f)return;var w=$('pvScreen').clientWidth,h=$('pvScreen').clientHeight,sc=w/1440;f.style.width='1440px';f.style.height=Math.ceil(h/sc)+'px';f.style.transform='scale('+sc+')';}
+  function updatePreview(force){
+    clearTimeout(pvTimer);
+    pvTimer=setTimeout(function(){
+      var sec=state.sections.find(function(s){return s.id===$('pSection').value;})||{},amber=sec.accent==='amber';
+      var url=$('pUrl').value.trim(),okUrl=/^https?:\/\//i.test(url);
+      $('pvUrl').textContent=$('pUrlLabel').value.trim()||urlLabel(url)||'your-link.github.io';
+      var scr=$('pvScreen');
+      if(state.preview==='iframe'){
+        if(okUrl){if(force||url!==lastFrameUrl){lastFrameUrl=url;scr.innerHTML='<iframe src="'+esc(url)+'" loading="lazy" tabindex="-1" title="Live preview"></iframe>';scaleFrame();}}
+        else{lastFrameUrl=null;scr.innerHTML='<div class="none">Paste the live link to see it here</div>';}
+      }else if(state.preview==='image'){
+        lastFrameUrl=null;var im=$('pImage').value.trim();
+        scr.innerHTML=/^https?:\/\//i.test(im)?'<img src="'+esc(im)+'" alt="">':'<div class="none">Upload a screenshot or paste its link</div>';
+      }else{lastFrameUrl=null;scr.innerHTML='<div class="none">No preview frame on the site</div>';}
+      $('pvDevice').style.opacity=state.preview==='none'?.45:1;
+      var tag=$('pTag').value.trim();$('pvTag').textContent=tag;$('pvTag').hidden=!tag;$('pvTag').className='pv-tag'+(amber?' amber':'');
+      $('pvTitle').innerHTML=esc($('pTitle').value.trim()||'Project title').replace(/\n/g,'<br>');
+      var k=$('pKicker').value.trim();$('pvKicker').textContent=k;$('pvKicker').hidden=!k;
+      $('pvDesc').innerHTML=$('pDesc').value.split(/\n\s*\n/).filter(function(x){return x.trim();}).map(function(x){return '<p>'+esc(x.trim()).replace(/\n/g,'<br>')+'</p>';}).join('');
+      $('pvChips').innerHTML=state.chips.map(function(c){return '<span>'+esc(c)+'</span>';}).join('');
+      $('pvBtn').textContent=$('pBtn').value.trim()||'Open the site';$('pvBtn').hidden=!okUrl;$('pvBtn').className='pv-btn'+(amber?' amber':'');
+      var n=$('pNote').value.trim();$('pvNote').textContent=n;$('pvNote').hidden=!n;
+    },force?0:250);
+  }
+  ['pSection','pTag','pTitle','pKicker','pDesc','pUrl','pUrlLabel','pBtn','pImage','pNote'].forEach(function(id){$(id).addEventListener('input',function(){updatePreview();});});
+  $('pSection').addEventListener('change',function(){updatePreview();});
+  window.addEventListener('resize',scaleFrame);
+
+  /* ---------- section editor ---------- */
+  function setAccent(v){state.accent=v;[].forEach.call($('sAccentSeg').children,function(b){b.classList.toggle('on',b.dataset.v===v);});}
+  $('sAccentSeg').addEventListener('click',function(e){var b=e.target.closest('[data-v]');if(b)setAccent(b.dataset.v);});
+  function openSection(id){
+    var s=id?state.sections.find(function(x){return x.id===id;}):null;
+    editorsOff();$('sectionEditor').hidden=false;state.selType='section';state.sel=s?s.id:null;renderTree();
+    $('sTitleHead').textContent=s?'Edit section':'New section';
+    $('sTitle').value=s?s.title:'';$('sEyebrow').value=s?s.eyebrow:'';$('sKey').value=s?s.key:'';
+    $('sVisible').checked=s?s.visible:true;setAccent(s?s.accent:'blue');$('sDelete').hidden=!s;
+    if(!s)$('sTitle').focus();
+  }
+  $('newSectionBtn').addEventListener('click',function(){openSection(null);});
+  $('sCancel').addEventListener('click',function(){editorsOff();$('welcome').hidden=false;state.sel=null;state.selType=null;renderTree();});
+  $('sForm').addEventListener('submit',async function(e){
+    e.preventDefault();
+    var title=$('sTitle').value.trim();if(!title)return;
+    var editing=state.sel?state.sections.find(function(x){return x.id===state.sel;}):null;
+    var row={title:title,eyebrow:$('sEyebrow').value.trim(),accent:state.accent,visible:$('sVisible').checked,key:slugify($('sKey').value.trim()||title)};
+    if(!editing)row.sort=state.sections.length?Math.max.apply(null,state.sections.map(function(s){return s.sort;}))+10:0;
+    var r=editing?await sb.from('portfolio_sections').update(row).eq('id',editing.id).select().single():await sb.from('portfolio_sections').insert(row).select().single();
+    if(r.error){toast(/duplicate key/i.test(r.error.message)?'That link name is taken — change it under Link name':'Not saved: '+r.error.message,true);return;}
+    if(editing)Object.assign(editing,r.data);else state.sections.push(r.data);
+    state.sel=r.data.id;$('sKey').value=r.data.key;$('sDelete').hidden=false;$('sTitleHead').textContent='Edit section';
+    renderTree();toast('Section saved');
+  });
+  $('sDelete').addEventListener('click',async function(){
+    var s=state.sections.find(function(x){return x.id===state.sel;});if(!s)return;
+    var n=projectsOf(s.id).length;
+    if(!await confirmBox('Delete section','"'+s.title+'"'+(n?' and its '+n+' project'+(n>1?'s':''):'')+' will be removed from the portfolio. This cannot be undone.'))return;
+    var r=await sb.from('portfolio_sections').delete().eq('id',s.id);
+    if(r.error){toast('Not deleted: '+r.error.message,true);return;}
+    state.sections=state.sections.filter(function(x){return x.id!==s.id;});state.projects=state.projects.filter(function(p){return p.section_id!==s.id;});
+    editorsOff();$('welcome').hidden=false;state.sel=null;state.selType=null;renderTree();toast('Section deleted');
+  });
+
+  boot();
+})();
+</script>
+</body>
+</html>

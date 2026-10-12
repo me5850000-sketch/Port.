@@ -242,6 +242,8 @@
   .sys-note{ font-size:14px !important; border-left:3px solid var(--amber); padding-left:14px; }
   @media(max-width:900px){ .sys-map{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
   @media(max-width:560px){ .sys-map{ grid-template-columns:1fr; } }
+  #work{ scroll-margin-top:88px; }
+  .device-screen > img.shot{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:top; }
   .transform-block{ max-width:1240px; margin:0 auto; padding:56px 0 64px; border-bottom:2px solid var(--line); display:flex; flex-direction:column; gap:56px; }
   .tb-head{ text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px; }
   .tb-head .eyebrow{ justify-content:center; }
@@ -445,7 +447,7 @@
   </div>
   <nav>
     <a href="#about">About</a>
-    <a href="#business">Work</a>
+    <a href="#work">Work</a>
     <a href="#skills" class="hide-sm">Skills</a>
     <a href="#journey" class="hide-sm">Journey</a>
     <button type="button" class="pdf-btn" onclick="window.print()">Save PDF</button>
@@ -466,7 +468,7 @@
     <div class="hero-rule"></div>
     <p class="en">I work on two fronts: systems and automation that let operations run on their own — from managing a clothing factory to data labeling operations. And a visual side: video editing, design, and content.</p>
     <div class="hero-actions">
-      <a class="btn-solid" href="#business"><span>See the work</span><span>&rarr;</span></a>
+      <a class="btn-solid" href="#work"><span>See the work</span><span>&rarr;</span></a>
       <a class="btn-outline" href="#about">About me</a>
     </div>
     <div class="scroll-cue"><div class="track"><div class="dot"></div></div><span>Scroll</span></div>
@@ -532,6 +534,7 @@
   </div>
 </section>
 
+<div id="work">
 <!-- ================= BUSINESS SYSTEMS ================= -->
 <section class="block world amber" id="business">
   <div class="inner">
@@ -841,6 +844,7 @@
     </div>
   </div>
 </section>
+</div>
 
 <!-- ================= JOURNEY ================= -->
 <section class="block" id="journey">
@@ -1162,6 +1166,54 @@
       }); },{threshold:.8, rootMargin:'-10% 0px -10% 0px'}).observe(frame);
     }
   });
+})();
+</script>
+
+<script>
+// Projects come from the admin dashboard (Supabase). The markup above stays as a fallback.
+(function(){
+  var URL='https://mlncwxzugxjulxxuhmsd.supabase.co/rest/v1/portfolio_sections?select=*,portfolio_projects(*)&order=sort.asc,created_at.asc&portfolio_projects.order=sort.asc';
+  var KEY='sb_publishable_RtZHLhzm4qLWYbIGIU54Eg_Schs3Nxy';
+  var root=document.getElementById('work'); if(!root||!window.fetch) return;
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function safeUrl(u){ u=String(u||'').trim(); return /^https?:\/\//i.test(u)?u:''; }
+  function project(p){
+    var url=safeUrl(p.live_url), img=safeUrl(p.image_url), label=p.url_label||url.replace(/^https?:\/\//,'').replace(/\/$/,'');
+    var screen='';
+    if(p.preview_type==='iframe'&&url) screen='<iframe src="'+esc(url)+'" loading="lazy" scrolling="yes"></iframe>';
+    else if(p.preview_type==='image'&&img) screen='<img class="shot" src="'+esc(img)+'" alt="'+esc(p.title)+'" loading="lazy">';
+    var frame=screen?'<div class="frame-col reveal"><div class="device"><div class="device-bar"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url">'+esc(label)+'</span></div><div class="device-screen">'+screen+'</div></div></div>':'';
+    var paras=String(p.description||'').split(/\n\s*\n/).filter(function(x){return x.trim();}).map(function(x){return '<p class="en">'+esc(x.trim()).replace(/\n/g,'<br>')+'</p>';}).join('');
+    var chips=(p.chips||[]).length?'<div class="chips">'+p.chips.map(function(c){return '<span>'+esc(c)+'</span>';}).join('')+'</div>':'';
+    var visit=url?'<a class="visit" href="'+esc(url)+'" target="_blank" rel="noopener"><span>'+esc(p.button_label||'Open the site')+'</span></a>':'';
+    var note=p.note?'<div class="mockup-note en">'+esc(p.note)+'</div>':'';
+    return '<div class="project wide" id="'+esc(p.slug)+'">'+frame
+      +'<div class="text-col reveal reveal-d1"><div class="wide-head">'
+      +(p.status_tag?'<span class="status-tag">'+esc(p.status_tag)+'</span>':'')
+      +'<h3>'+esc(p.title).replace(/\n/g,'<br>')+'</h3>'
+      +(p.kicker?'<span class="kicker">'+esc(p.kicker)+'</span>':'')
+      +'</div><div class="wide-body">'+paras+chips+visit+note+'</div>'
+      +(p.extra_html||'')+'</div></div>';
+  }
+  fetch(URL,{headers:{apikey:KEY,Authorization:'Bearer '+KEY}}).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); }).then(function(secs){
+    if(!Array.isArray(secs)||!secs.length) return;
+    var tb=root.querySelector('.transform-block'); if(tb) tb.parentNode.removeChild(tb);
+    var out='';
+    secs.forEach(function(s){
+      var ps=(s.portfolio_projects||[]).filter(function(p){return p.visible!==false;});
+      if(!ps.length) return;
+      out+='<section class="block world'+(s.accent==='amber'?' amber':'')+'" id="'+esc(s.key)+'"><div class="inner">'
+        +'<div class="world-head reveal"><div class="eyebrow">'+esc(s.eyebrow)+'</div><h2>'+esc(s.title)+'</h2></div>'
+        +ps.map(project).join('')+'</div></section>';
+    });
+    if(!out) return;
+    root.innerHTML=out;
+    if(tb){ var anchor=document.getElementById('dashliving'); if(anchor) anchor.parentNode.insertBefore(tb,anchor.nextSibling); }
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.12});
+    root.querySelectorAll('.reveal').forEach(function(el){ if(el.getBoundingClientRect().top<innerHeight) el.classList.add('in'); else io.observe(el); });
+    window.dispatchEvent(new Event('resize'));
+    if(location.hash){ var t=document.getElementById(location.hash.slice(1)); if(t) t.scrollIntoView(); }
+  }).catch(function(){ /* keep the built-in markup */ });
 })();
 </script>
 </body>
