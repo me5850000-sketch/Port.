@@ -281,11 +281,21 @@
     content:''; position:absolute; left:-24px; top:4px; width:11px; height:11px; border-radius:50%;
     background:var(--bg); border:2px solid var(--line); transition:background .35s ease, border-color .35s ease, box-shadow .35s ease;
   }
-  .timeline-row.in .yr::before{ background:var(--blue); border-color:var(--blue); box-shadow:0 0 0 4px rgba(47,95,168,0.15); }
+  .timeline-row.reached .yr::before{ background:var(--blue); border-color:var(--blue); box-shadow:0 0 0 4px rgba(47,95,168,0.15); }
+  .timeline-row .yr{ color:var(--muted-2); transition:color .4s ease, transform .5s cubic-bezier(.16,1,.3,1); transform-origin:0 50%; }
+  .timeline-row.reached .yr{ color:var(--blue); transform:scale(1.18); }
+  .timeline-row h4, .timeline-row p.en{ transition:opacity .5s ease; }
+  .timeline-row:not(.reached) h4, .timeline-row:not(.reached) p.en{ opacity:.45; }
+  .timeline-fill{ position:absolute; left:5px; top:0; width:2px; height:0; background:linear-gradient(var(--blue),var(--amber)); z-index:1; }
+  .timeline-head{ position:absolute; left:6px; top:0; transform:translate(-50%,-50%); z-index:2; pointer-events:none; }
+  .timeline-head i{ display:block; width:15px; height:15px; border-radius:50%; background:var(--amber); box-shadow:0 0 0 5px rgba(169,112,45,.18), 0 0 22px rgba(169,112,45,.55); }
+  .timeline-head b{ position:absolute; left:22px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:900; letter-spacing:.04em; color:var(--amber); background:var(--bg); padding:2px 7px; border:1.5px solid var(--amber); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .timeline:not(.started) .timeline-head{ opacity:0; }
+  .timeline-head{ transition:opacity .4s ease; }
   .timeline::before{ content:''; position:absolute; left:5px; top:0; bottom:0; width:2px; background:var(--line); }
   .timeline-row h4{ font-size:19px; font-weight:800; text-transform:uppercase; letter-spacing:-0.005em; margin-bottom:6px; }
   .timeline-row p.en{ font-size:14px; max-width:640px; }
-  @media(max-width:640px){ .timeline-row{ grid-template-columns:1fr; gap:6px; } .timeline::before, .timeline-row .yr::before{ display:none; } }
+  @media(max-width:640px){ .timeline-row{ grid-template-columns:1fr; gap:6px; } .timeline::before, .timeline-row .yr::before, .timeline-fill, .timeline-head{ display:none; } .timeline-row:not(.reached) h4, .timeline-row:not(.reached) p.en{ opacity:1; } }
 
   #how{ padding-top:6px; padding-bottom:90px; }
   .how-card{ max-width:1240px; margin:0 auto; }
@@ -353,7 +363,7 @@
   [data-theme="dark"] .device{ box-shadow:0 20px 44px rgba(0,0,0,0.5); }
   [data-theme="dark"] .mock-key.hot{ background:rgba(116,162,234,0.16); }
   [data-theme="dark"] .mock-key.hot2{ background:rgba(217,158,88,0.16); }
-  [data-theme="dark"] .timeline-row.in .yr::before{ box-shadow:0 0 0 4px rgba(116,162,234,0.18); }
+  [data-theme="dark"] .timeline-row.reached .yr::before{ box-shadow:0 0 0 4px rgba(116,162,234,0.18); }
   .theme-btn{
     flex:0 0 auto; width:40px; height:40px; display:grid; place-items:center; cursor:pointer;
     background:var(--surface); color:var(--ink); border:2px solid var(--line);
@@ -772,6 +782,8 @@
       <h2 style="width:100%;">How I Got Here</h2>
     </div>
     <div class="timeline">
+      <div class="timeline-fill" aria-hidden="true"></div>
+      <div class="timeline-head" aria-hidden="true"><i></i><b>2023</b></div>
       <div class="timeline-row reveal">
         <div class="yr">2023</div>
         <div><h4>Joining Micro Engineering</h4><p class="en">Hired at Micro Engineering on 31/7/2023, right after finishing high school. Left for about five months to pursue another opportunity, then came back to the company.</p></div>
@@ -1017,6 +1029,35 @@
   (function loop(){if(moved)moved=draw();requestAnimationFrame(loop)})();
   colors();size();addEventListener('resize',size);
   new MutationObserver(colors).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+})();
+</script>
+
+<script>
+(function(){
+  var tl=document.querySelector('.timeline'); if(!tl) return;
+  var fill=tl.querySelector('.timeline-fill'), head=tl.querySelector('.timeline-head'), lbl=head.querySelector('b');
+  var rows=[].slice.call(tl.querySelectorAll('.timeline-row'));
+  var ticking=false;
+  function update(){
+    ticking=false;
+    var r=tl.getBoundingClientRect(), H=tl.offsetHeight-70, mark=innerHeight*0.6;
+    var y=Math.max(0,Math.min(H,mark-r.top));
+    fill.style.height=y+'px'; head.style.top=y+'px';
+    tl.classList.toggle('started',y>0&&y<H);
+    var cur=null, pts=rows.map(function(row){return {row:row,top:row.offsetTop+32,yr:+row.querySelector('.yr').textContent}});
+    pts.forEach(function(p,i){
+      var on=y>=p.top-6; p.row.classList.toggle('reached',on);
+      if(on) cur=i;
+    });
+    // year on the moving head counts between milestones
+    var a=pts[cur==null?0:cur], b=pts[Math.min((cur==null?0:cur)+1,pts.length-1)];
+    var k=b===a?1:Math.max(0,Math.min(1,(y-a.top)/(b.top-a.top)));
+    var year=cur==null?pts[0].yr:a.yr+(b.yr-a.yr)*k;
+    var pct=Math.round(y/H*100);
+    lbl.textContent=Math.floor(year)+' · '+pct+'%';
+  }
+  function onScroll(){ if(!ticking){ticking=true;requestAnimationFrame(update);} }
+  addEventListener('scroll',onScroll,{passive:true}); addEventListener('resize',onScroll); update();
 })();
 </script>
 </body>
