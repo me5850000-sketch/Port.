@@ -231,13 +231,17 @@
   .visit.whatsapp:hover{ background:#25d366; border-color:#25d366; color:#fff; }
   .mockup-note{ font-size:12px; color:var(--muted-2); margin-top:12px; }
 
-  .sys-map{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; background:var(--line); border:2px solid var(--line); margin:4px 0 22px; }
-  .sys-item{ background:var(--surface); padding:16px 18px; min-width:0; transition:background .3s; }
+  .sys-map{ grid-column:1/-1; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; background:var(--line); border:2px solid var(--line); margin-top:8px; }
+  .sys-label{ grid-column:1/-1; background:var(--bg); padding:12px 4px 10px; font-size:12px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .sys-item{ background:var(--surface); padding:20px 20px 22px; min-width:0; display:flex; flex-direction:column; gap:8px; transition:background .3s, transform .3s; }
   .sys-item:hover{ background:var(--bg); }
-  .sys-item h6{ font-size:13px; font-weight:900; text-transform:uppercase; letter-spacing:.02em; color:var(--amber); margin-bottom:6px; }
-  .sys-item p{ font-size:14px; line-height:1.6; color:var(--muted); }
+  .sys-n{ font-size:28px; font-weight:900; letter-spacing:-0.03em; line-height:1; color:var(--line); transition:color .3s; font-variant-numeric:tabular-nums; }
+  .sys-item:hover .sys-n{ color:var(--amber); }
+  .sys-item h6{ font-size:14px; font-weight:900; text-transform:uppercase; letter-spacing:.02em; color:var(--ink); }
+  .sys-item p{ font-size:14px; line-height:1.65; color:var(--muted); }
   .sys-note{ font-size:14px !important; border-left:3px solid var(--amber); padding-left:14px; }
-  @media(max-width:640px){ .sys-map{ grid-template-columns:1fr; } }
+  @media(max-width:900px){ .sys-map{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  @media(max-width:560px){ .sys-map{ grid-template-columns:1fr; } }
   .transform-block{ max-width:1240px; margin:0 auto; padding:56px 0 64px; border-bottom:2px solid var(--line); display:flex; flex-direction:column; gap:56px; }
   .tb-head{ text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px; }
   .tb-head .eyebrow{ justify-content:center; }
@@ -535,19 +539,20 @@
         </div>
         <div class="wide-body">
           <p class="en">The system that runs Living Mood, a finishing and contracting company: people, projects, money and materials in one place. Behind it are 8 Google Sheets files; the dashboard is the only way anyone touches them. The point is that nothing is entered twice. One entry on one page updates every other page that depends on it.</p>
-          <div class="sys-map">
-            <div class="sys-item"><h6>The daily log is the source</h6><p>Each day a supervisor records who worked, on which project, how many hours, and any evening shift (سهرة). That single entry feeds attendance, payroll, the project's labour cost and the "who's where" board.</p></div>
-            <div class="sys-item"><h6>Payroll builds itself</h6><p>Monthly and weekly attendance sheets are generated from the log. Weekly staff run Friday to Thursday, deduction codes come off the net pay, and a name alias system makes sure one worker spelled two ways is still one person.</p></div>
-            <div class="sys-item"><h6>Projects are the spine</h6><p>Every expense, hour and payment points to a project. Rename a project once and the new name follows it across every sheet. Each project shows cost per employee, day by day, next to its own revenue ledger, so profit is always current.</p></div>
-            <div class="sys-item"><h6>Expenses flow into costs</h6><p>A daily expense is routed to its project's costs and moves the treasury balance. Delete it and the linked cost row goes with it through a hidden sync ID, so no stray numbers stay behind.</p></div>
-            <div class="sys-item"><h6>Treasury and debts</h6><p>Collections, expenses and partner withdrawals all land in the treasury, so cash flow is a live figure. Debts have their own tab with filters and notes on each entry.</p></div>
-            <div class="sys-item"><h6>Work Flow on site</h6><p>The daily craftsmen report, gaps per project and tomorrow's plan. Materials keep a stock count and usage log, and a material leaves the list by itself when it runs out.</p></div>
-          </div>
           <p class="en sys-note">Built to hold up under daily use: Google retries can no longer create duplicate payroll or expense rows, frequently read data is cached, and real requests jump ahead of background loading.</p>
           <div class="chips"><span>Google Apps Script</span><span>8 connected Google Sheets</span><span>Auto-sync across sections</span><span>Caching for performance</span><span>Role-based access</span></div>
           <a class="visit" href="https://livingmoood-commits.github.io/Admin-Dashboard/" target="_blank" rel="noopener"><span>Open the dashboard</span></a>
           <div class="mockup-note en">The real system needs an account. Press the demo button on the sign-in screen to look around with made-up numbers; nothing is saved and no real data is shown.</div>
         </div>
+        <div class="sys-map">
+            <div class="sys-label">How the pieces connect</div>
+            <div class="sys-item"><span class="sys-n">01</span><h6>The daily log is the source</h6><p>Each day a supervisor records who worked, on which project, how many hours, and any evening shift (سهرة). That single entry feeds attendance, payroll, the project's labour cost and the "who's where" board.</p></div>
+            <div class="sys-item"><span class="sys-n">02</span><h6>Payroll builds itself</h6><p>Monthly and weekly attendance sheets are generated from the log. Weekly staff run Friday to Thursday, deduction codes come off the net pay, and a name alias system makes sure one worker spelled two ways is still one person.</p></div>
+            <div class="sys-item"><span class="sys-n">03</span><h6>Projects are the spine</h6><p>Every expense, hour and payment points to a project. Rename a project once and the new name follows it across every sheet. Each project shows cost per employee, day by day, next to its own revenue ledger, so profit is always current.</p></div>
+            <div class="sys-item"><span class="sys-n">04</span><h6>Expenses flow into costs</h6><p>A daily expense is routed to its project's costs and moves the treasury balance. Delete it and the linked cost row goes with it through a hidden sync ID, so no stray numbers stay behind.</p></div>
+            <div class="sys-item"><span class="sys-n">05</span><h6>Treasury and debts</h6><p>Collections, expenses and partner withdrawals all land in the treasury, so cash flow is a live figure. Debts have their own tab with filters and notes on each entry.</p></div>
+            <div class="sys-item"><span class="sys-n">06</span><h6>Work Flow on site</h6><p>The daily craftsmen report, gaps per project and tomorrow's plan. Materials keep a stock count and usage log, and a material leaves the list by itself when it runs out.</p></div>
+          </div>
       </div>
     </div>
 
