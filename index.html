@@ -200,6 +200,16 @@
 
   .project{ max-width:1240px; margin:0 auto; padding:64px 0; border-bottom:2px solid var(--line); display:flex; flex-direction:column; gap:36px; }
   .project:last-child{ border-bottom:none; }
+  /* wide showcase: big live preview, details underneath */
+  .project.wide{ flex-direction:column !important; align-items:stretch !important; gap:40px; }
+  .project.wide .frame-col, .project.wide .text-col{ flex:none; width:100%; }
+  .project.wide .device{ box-shadow:0 40px 80px -30px rgba(28,26,25,0.35); }
+  .project.wide .text-col{ display:grid; gap:20px 64px; align-items:start; }
+  .project.wide .wide-head{ display:flex; flex-direction:column; align-items:flex-start; gap:16px; }
+  .project.wide .wide-head h3{ font-size:clamp(30px,4.4vw,54px); line-height:.95; letter-spacing:-0.03em; margin:0; }
+  .project.wide .wide-head .kicker{ font-size:13px; color:var(--muted); max-width:340px; }
+  .project.wide .wide-body p.en{ font-size:16.5px; line-height:1.75; }
+  @media(min-width:900px){ .project.wide .text-col{ grid-template-columns:minmax(0,5fr) minmax(0,7fr); } }
   @media(min-width:960px){
     .project{ flex-direction:row; align-items:center; gap:56px; }
     .project.reverse{ flex-direction:row-reverse; }
@@ -754,7 +764,7 @@
       <h2>Web Design</h2>
     </div>
 
-    <div class="project" id="eslam-cv">
+    <div class="project wide" id="eslam-cv">
       <div class="frame-col reveal">
         <div class="device">
           <div class="device-bar"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url">me5850000-sketch.github.io/Test-For-port</span></div>
@@ -764,11 +774,16 @@
         </div>
       </div>
       <div class="text-col reveal reveal-d1">
-        <span class="status-tag">Client project &middot; personal CV site</span>
-        <h3>Eslam Salah — CV Website</h3>
-        <p class="en">A one-page CV site for a Training Supervisor in AI data annotation, built from his PDF resume. The look borrows from the tools he works in: a LiDAR-style point cloud turns behind the hero and his name sits inside an annotation bounding box with its own label. A dot grid behind the whole page moves away from the mouse, sections rise in as you scroll, and switching between dark and light opens the new theme in a circle from the toggle.</p>
-        <div class="chips"><span>HTML / CSS / JS</span><span>Canvas animation</span><span>Dark / light with circular reveal</span><span>Scroll reveal &amp; count-up</span><span>Mobile-first</span></div>
-        <a class="visit" href="https://me5850000-sketch.github.io/Test-For-port/" target="_blank" rel="noopener"><span>Open the site</span></a>
+        <div class="wide-head">
+          <span class="status-tag">Portfolio website &middot; client project</span>
+          <h3>Eslam Salah<br>Portfolio Site</h3>
+          <span class="kicker">For a Training Supervisor in AI data annotation &middot; built from his PDF resume</span>
+        </div>
+        <div class="wide-body">
+          <p class="en">His CV turned into a personal portfolio site. The design borrows from the tools he works in every day: a LiDAR-style point cloud turns behind the hero, and his name sits inside an annotation bounding box with its own label. A dot grid behind the page moves away from the mouse, sections rise in as you scroll, and switching between dark and light opens the new theme in a circle from the toggle.</p>
+          <div class="chips"><span>HTML / CSS / JS</span><span>Canvas animation</span><span>Dark / light with circular reveal</span><span>Scroll reveal &amp; count-up</span><span>Mobile-first</span></div>
+          <a class="visit" href="https://me5850000-sketch.github.io/Test-For-port/" target="_blank" rel="noopener"><span>Open the site</span></a>
+        </div>
       </div>
     </div>
   </div>
