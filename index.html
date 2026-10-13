@@ -548,7 +548,7 @@
         <div class="device">
           <div class="device-bar"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url">livingmoood-commits.github.io/Admin-Dashboard</span></div>
           <div class="device-screen">
-            <iframe src="https://livingmoood-commits.github.io/Admin-Dashboard/" loading="lazy" scrolling="yes"></iframe>
+            <iframe data-src="https://livingmoood-commits.github.io/Admin-Dashboard/" loading="lazy" scrolling="yes"></iframe>
           </div>
         </div>
       </div>
@@ -614,7 +614,7 @@
         <div class="device">
           <div class="device-bar"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url">livingmoood-commits.github.io/Catalog</span></div>
           <div class="device-screen">
-            <iframe src="https://livingmoood-commits.github.io/Catalog/" loading="lazy" scrolling="yes"></iframe>
+            <iframe data-src="https://livingmoood-commits.github.io/Catalog/" loading="lazy" scrolling="yes"></iframe>
           </div>
         </div>
       </div>
@@ -646,7 +646,7 @@
         <div class="device">
           <div class="device-bar"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url">me5850000-sketch.github.io/METI-Dashboard-UI</span></div>
           <div class="device-screen">
-            <iframe src="https://me5850000-sketch.github.io/METI-Dashboard-UI/" loading="lazy" scrolling="yes"></iframe>
+            <iframe data-src="https://me5850000-sketch.github.io/METI-Dashboard-UI/" loading="lazy" scrolling="yes"></iframe>
           </div>
         </div>
       </div>
@@ -669,7 +669,7 @@
         <div class="device">
           <div class="device-bar"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url">me5850000-sketch.github.io/meti-tracker</span></div>
           <div class="device-screen">
-            <iframe src="https://me5850000-sketch.github.io/meti-tracker/" loading="lazy" scrolling="yes"></iframe>
+            <iframe data-src="https://me5850000-sketch.github.io/meti-tracker/" loading="lazy" scrolling="yes"></iframe>
           </div>
         </div>
         <div class="mock-sheet-wrap">
@@ -706,7 +706,7 @@
         <div class="device">
           <div class="device-bar"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url">me5850000-sketch.github.io/Shortcut-Keys</span></div>
           <div class="device-screen">
-            <iframe src="https://me5850000-sketch.github.io/Shortcut-Keys/" loading="lazy" scrolling="yes"></iframe>
+            <iframe data-src="https://me5850000-sketch.github.io/Shortcut-Keys/" loading="lazy" scrolling="yes"></iframe>
           </div>
         </div>
       </div>
@@ -738,7 +738,7 @@
         <div class="device">
           <div class="device-bar"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url">hazemnader1244-del.github.io/Salary</span></div>
           <div class="device-screen">
-            <iframe src="https://hazemnader1244-del.github.io/Salary/" loading="lazy" scrolling="yes"></iframe>
+            <iframe data-src="https://hazemnader1244-del.github.io/Salary/" loading="lazy" scrolling="yes"></iframe>
           </div>
         </div>
       </div>
@@ -771,7 +771,7 @@
         <div class="device">
           <div class="device-bar"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url">rechargewatches.github.io/Recharge-watches-</span></div>
           <div class="device-screen">
-            <iframe src="https://rechargewatches.github.io/Recharge-watches-/" loading="lazy" scrolling="yes"></iframe>
+            <iframe data-src="https://rechargewatches.github.io/Recharge-watches-/" loading="lazy" scrolling="yes"></iframe>
           </div>
         </div>
       </div>
@@ -793,7 +793,7 @@
         <div class="device">
           <div class="device-bar"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url">me5850000-sketch.github.io/-</span></div>
           <div class="device-screen">
-            <iframe src="https://me5850000-sketch.github.io/-/" loading="lazy" scrolling="yes"></iframe>
+            <iframe data-src="https://me5850000-sketch.github.io/-/" loading="lazy" scrolling="yes"></iframe>
           </div>
         </div>
       </div>
@@ -825,7 +825,7 @@
         <div class="device">
           <div class="device-bar"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url">me5850000-sketch.github.io/Test-For-port</span></div>
           <div class="device-screen">
-            <iframe src="https://me5850000-sketch.github.io/Test-For-port/" loading="lazy" scrolling="yes"></iframe>
+            <iframe data-src="https://me5850000-sketch.github.io/Test-For-port/" loading="lazy" scrolling="yes"></iframe>
           </div>
         </div>
       </div>
@@ -1180,7 +1180,7 @@
   function project(p){
     var url=safeUrl(p.live_url), img=safeUrl(p.image_url), label=p.url_label||url.replace(/^https?:\/\//,'').replace(/\/$/,'');
     var screen='';
-    if(p.preview_type==='iframe'&&url) screen='<iframe src="'+esc(url)+'" loading="lazy" scrolling="yes"></iframe>';
+    if(p.preview_type==='iframe'&&url) screen='<iframe data-src="'+esc(url)+'" scrolling="yes"></iframe>';
     else if(p.preview_type==='image'&&img) screen='<img class="shot" src="'+esc(img)+'" alt="'+esc(p.title)+'" loading="lazy">';
     var frame=screen?'<div class="frame-col reveal"><div class="device"><div class="device-bar"><span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span><span class="device-url">'+esc(label)+'</span></div><div class="device-screen">'+screen+'</div></div></div>':'';
     var paras=String(p.description||'').split(/\n\s*\n/).filter(function(x){return x.trim();}).map(function(x){return '<p class="en">'+esc(x.trim()).replace(/\n/g,'<br>')+'</p>';}).join('');
@@ -1212,8 +1212,32 @@
     var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.12});
     root.querySelectorAll('.reveal').forEach(function(el){ if(el.getBoundingClientRect().top<innerHeight) el.classList.add('in'); else io.observe(el); });
     window.dispatchEvent(new Event('resize'));
+    if(window.__lazyFrames) window.__lazyFrames();
     if(location.hash){ var t=document.getElementById(location.hash.slice(1)); if(t) t.scrollIntoView(); }
   }).catch(function(){ /* keep the built-in markup */ });
+})();
+</script>
+
+<script>
+// Live previews load only when they scroll into view, and a site inside a preview
+// can never pull the page to itself by focusing its own login field.
+(function(){
+  var userMoved=false, lastY=0;
+  ['wheel','touchstart','keydown','mousedown'].forEach(function(ev){ addEventListener(ev,function(){ userMoved=true; clearTimeout(userMoved._t); userMoved._t=setTimeout(function(){userMoved=false;},1200); },{passive:true}); });
+  function guard(f){
+    f.setAttribute('tabindex','-1');
+    var y=window.scrollY, t0=Date.now();
+    function back(){ if(!userMoved && Math.abs(window.scrollY-y)>40 && Date.now()-t0<4000){ window.scrollTo(0,y); } }
+    f.addEventListener('load',function(){ y=window.scrollY; t0=Date.now(); setTimeout(back,50); setTimeout(back,400); setTimeout(back,1200); });
+    var onScroll=function(){ if(Date.now()-t0>4000){ removeEventListener('scroll',onScroll); return; } if(!userMoved && document.activeElement===f){ window.scrollTo(0,y); f.blur(); } else { y=window.scrollY; } };
+    addEventListener('scroll',onScroll,{passive:true});
+    f.src=f.getAttribute('data-src'); f.removeAttribute('data-src');
+  }
+  var io=('IntersectionObserver' in window)?new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ io.unobserve(e.target); guard(e.target); } }); },{rootMargin:'200px 0px'}):null;
+  function scan(){ document.querySelectorAll('iframe[data-src]').forEach(function(f){ if(io) io.observe(f); else guard(f); }); }
+  window.__lazyFrames=scan;
+  if('scrollRestoration' in history && !location.hash) history.scrollRestoration='manual';
+  scan();
 })();
 </script>
 </body>
