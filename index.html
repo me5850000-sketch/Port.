@@ -210,6 +210,9 @@
   .project.wide .wide-head{ display:flex; flex-direction:column; align-items:flex-start; gap:16px; }
   .project.wide .wide-head h3{ font-size:clamp(26px,3.4vw,42px); line-height:1; letter-spacing:-0.025em; margin:0; }
   .project.wide .wide-head .kicker{ font-size:13px; color:var(--muted); max-width:340px; }
+  .project.wide .text-col > :not(.wide-head):not(.wide-body){ grid-column:1/-1; min-width:0; }
+  .project.wide .text-col > .mock-sheet-wrap{ margin-top:8px; }
+  .project.wide .text-col > .mock-sheet-wrap .mock-sheet{ overflow-x:auto; }
   .project.wide .wide-body p.en{ font-size:16.5px; line-height:1.75; }
   @media(min-width:900px){ .project.wide .text-col{ grid-template-columns:minmax(0,5fr) minmax(0,7fr); } }
   @media(min-width:960px){
