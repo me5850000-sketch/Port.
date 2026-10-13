@@ -1214,7 +1214,8 @@
     window.dispatchEvent(new Event('resize'));
     if(window.__lazyFrames) window.__lazyFrames();
     if(location.hash){ var t=document.getElementById(location.hash.slice(1)); if(t) t.scrollIntoView(); }
-  }).catch(function(){ /* keep the built-in markup */ });
+    window.dispatchEvent(new Event('work:ready'));
+  }).catch(function(){ window.dispatchEvent(new Event('work:ready')); });
 })();
 </script>
 
@@ -1236,8 +1237,44 @@
   var io=('IntersectionObserver' in window)?new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ io.unobserve(e.target); guard(e.target); } }); },{rootMargin:'200px 0px'}):null;
   function scan(){ document.querySelectorAll('iframe[data-src]').forEach(function(f){ if(io) io.observe(f); else guard(f); }); }
   window.__lazyFrames=scan;
-  if('scrollRestoration' in history && !location.hash) history.scrollRestoration='manual';
   scan();
+})();
+</script>
+
+<script>
+// Refresh keeps your place: remember which block is at the top of the screen and how far into it,
+// then come back to the same spot after the projects finish loading.
+(function(){
+  var KEY='hn.scrollPos';
+  if('scrollRestoration' in history) history.scrollRestoration='manual';
+  function anchors(){ return document.querySelectorAll('section[id], .project[id], .transform-block, header + section, footer'); }
+  function save(){
+    try{
+      var best=null, bestTop=-Infinity;
+      anchors().forEach(function(el){ var t=el.getBoundingClientRect().top; if(t<=80 && t>bestTop){ bestTop=t; best=el; } });
+      var key=best?(best.id?'#'+best.id:(best.classList.contains('transform-block')?'.transform-block':null)):null;
+      sessionStorage.setItem(KEY, JSON.stringify({ y:window.scrollY, a:key, off:best?Math.round(-bestTop):0, h:document.documentElement.scrollHeight }));
+    }catch(e){}
+  }
+  var t; addEventListener('scroll',function(){ clearTimeout(t); t=setTimeout(save,150); },{passive:true});
+  addEventListener('pagehide',save); addEventListener('beforeunload',save);
+
+  var nav=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{};
+  var isReload=nav.type==='reload'||(performance.navigation&&performance.navigation.type===1);
+  var data=null; try{ data=JSON.parse(sessionStorage.getItem(KEY)||'null'); }catch(e){}
+  if(!isReload||!data||location.hash){ if(!location.hash) window.scrollTo(0,0); return; }
+
+  var done=false;
+  function restore(){
+    if(done) return; done=true;
+    var el=data.a?document.querySelector(data.a):null;
+    var y=el?el.getBoundingClientRect().top+window.scrollY+data.off:data.y;
+    window.scrollTo(0,Math.max(0,y));
+    // fonts and late layout can still nudge things; settle once more
+    setTimeout(function(){ var el2=data.a?document.querySelector(data.a):null; if(el2){ var y2=el2.getBoundingClientRect().top+window.scrollY+data.off; if(Math.abs(y2-window.scrollY)>8) window.scrollTo(0,y2); } },350);
+  }
+  addEventListener('work:ready',function(){ requestAnimationFrame(restore); });
+  setTimeout(restore,2500); // if the project list is slow, don't wait forever
 })();
 </script>
 </body>
