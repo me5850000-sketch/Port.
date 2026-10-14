@@ -165,6 +165,7 @@
   <span class="grow"></span>
   <span class="who" id="who"></span>
   <a class="btn ghost" href="./" target="_blank" rel="noopener">View portfolio</a>
+  <a class="btn ghost" href="https://me5850000-sketch.github.io/Port.Arabic/" target="_blank" rel="noopener">العربي</a>
   <button class="btn ghost" id="themeBtn" type="button" aria-label="Switch theme">Theme</button>
   <button class="btn" id="logoutBtn" type="button" hidden>Sign out</button>
 </header>
@@ -225,6 +226,14 @@
             <div class="upload"><input type="url" id="pImage" placeholder="https://… or upload" style="flex:1;min-width:200px"><label class="btn" for="pImageFile" style="cursor:pointer">Upload</label><input type="file" id="pImageFile" accept="image/*" hidden></div>
           </div>
           <div class="field"><label for="pNote">Note under the button</label><textarea id="pNote" rows="2" style="min-height:60px" placeholder="Optional · e.g. how to open the demo"></textarea></div>
+          <details class="adv" open><summary>Arabic version (Port.Arabic)</summary>
+            <div class="form" dir="rtl">
+              <div class="field"><label for="pKickerAr">السطر الصغير تحت العنوان</label><input type="text" id="pKickerAr" dir="rtl"></div>
+              <div class="field"><label for="pDescAr">الوصف بالعربي</label><textarea id="pDescAr" rows="6" dir="rtl" placeholder="سيبه فاضي لو عاوز الإنجليزي يظهر"></textarea><span class="hint">سطر فاضي بين الفقرات. العنوان والتاج والـ chips بيفضلوا إنجليزي.</span></div>
+              <div class="field"><label for="pNoteAr">الملاحظة تحت الزرار</label><textarea id="pNoteAr" rows="2" dir="rtl" style="min-height:60px"></textarea></div>
+              <div class="field"><label for="pExtraAr">HTML إضافي بالعربي</label><textarea class="code" id="pExtraAr" dir="ltr"></textarea></div>
+            </div>
+          </details>
           <details class="adv"><summary>Advanced</summary>
             <div class="form">
               <div class="field"><label for="pSlug">Link name (#anchor)</label><input type="text" id="pSlug" placeholder="made from the title"></div>
@@ -422,6 +431,10 @@
     $('pNote').value=p?p.note:'';
     $('pSlug').value=p?p.slug:'';
     $('pExtra').value=p?p.extra_html:'';
+    $('pKickerAr').value=p?(p.kicker_ar||''):'';
+    $('pDescAr').value=p?(p.description_ar||''):'';
+    $('pNoteAr').value=p?(p.note_ar||''):'';
+    $('pExtraAr').value=p?(p.extra_html_ar||''):'';
     $('pDelete').hidden=!p;
     state.chips=p?(p.chips||[]).slice():[];renderChips();
     setPreviewType(p?p.preview_type:'iframe');
@@ -443,6 +456,7 @@
       description:$('pDesc').value.trim(),chips:state.chips.slice(),live_url:url,url_label:$('pUrlLabel').value.trim()||urlLabel(url),
       preview_type:state.preview,image_url:$('pImage').value.trim(),button_label:$('pBtn').value.trim()||'Open the site',
       note:$('pNote').value.trim(),extra_html:$('pExtra').value,visible:$('pVisible').checked,
+      kicker_ar:$('pKickerAr').value.trim(),description_ar:$('pDescAr').value.trim(),note_ar:$('pNoteAr').value.trim(),extra_html_ar:$('pExtraAr').value,
       slug:slugify($('pSlug').value.trim()||title.split('\n')[0].split('—')[0])
     };
     if(!editing||editing.section_id!==sid){var sib=projectsOf(sid);row.sort=sib.length?sib[sib.length-1].sort+10:0;}

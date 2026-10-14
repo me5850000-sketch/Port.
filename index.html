@@ -247,6 +247,11 @@
   @media(max-width:560px){ .sys-map{ grid-template-columns:1fr; } }
   #work{ scroll-margin-top:88px; }
   .device-screen > img.shot{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:top; }
+  .tour-tag{ margin-left:auto; display:inline-flex; align-items:center; gap:6px; font-size:10.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--amber); opacity:0; transition:opacity .3s; white-space:nowrap; }
+  .tour-tag i{ width:7px; height:7px; border-radius:50%; background:var(--amber); animation:tourBlink 1.2s ease-in-out infinite; }
+  .tour-tag.on{ opacity:1; }
+  @keyframes tourBlink{ 50%{ opacity:.25; } }
+  @media(max-width:640px){ .tour-tag span{ display:none; } }
   .transform-block{ max-width:1240px; margin:0 auto; padding:56px 0 64px; border-bottom:2px solid var(--line); display:flex; flex-direction:column; gap:56px; }
   .tb-head{ text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px; }
   .tb-head .eyebrow{ justify-content:center; }
@@ -1277,6 +1282,143 @@
   }
   addEventListener('work:ready',function(){ requestAnimationFrame(restore); });
   setTimeout(restore,2500); // if the project list is slow, don't wait forever
+})();
+</script>
+
+<script>
+// Auto tour, driven from the portfolio itself: while a live preview is on screen it walks through
+// that site's own pages; the moment the visitor touches the preview, it hands over control for good.
+// Works for sites on the same address as the portfolio (me5850000-sketch.github.io); others stay as they are.
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var state=new WeakMap();
+  function frames(){ return [].slice.call(document.querySelectorAll('.device-screen iframe')); }
+  function win(f){ try{ var w=f.contentWindow; void w.document.body; return w; }catch(e){ return null; } }
+  function tag(f){
+    var bar=f.closest('.device'); bar=bar&&bar.querySelector('.device-bar'); if(!bar) return null;
+    var t=bar.querySelector('.tour-tag');
+    if(!t){ t=document.createElement('span'); t.className='tour-tag'; t.innerHTML='<i></i><span>Auto tour · click to take over</span>'; bar.appendChild(t); }
+    return t;
+  }
+  function st(f){ var s=state.get(f); if(!s){ s={running:false,stopped:false,gen:0,timers:[],hooked:null}; state.set(f,s); } return s; }
+
+  function engine(f,w,s){
+    var d=w.document;
+    function alive(g){ return s.running&&g===s.gen&&f.isConnected; }
+    function wait(ms,g){ return new Promise(function(r){ s.timers.push(setTimeout(function(){ r(alive(g)); },ms)); }); }
+    function scroller(){
+      var best=d.scrollingElement||d.documentElement, max=best.scrollHeight-best.clientHeight;
+      d.querySelectorAll('*').forEach(function(el){
+        if(el.clientHeight<160||el.offsetParent===null) return;
+        var oy=w.getComputedStyle(el).overflowY; if(oy!=='auto'&&oy!=='scroll') return;
+        var dd=el.scrollHeight-el.clientHeight; if(dd>max+20){ max=dd; best=el; }
+      });
+      return best;
+    }
+    function smoothTo(el,to,ms,g){
+      return new Promise(function(res){
+        var from=el.scrollTop,t0=performance.now();
+        (function fr(t){
+          if(!alive(g)) return res(false);
+          var k=Math.min(1,(t-t0)/ms),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+          el.scrollTop=from+(to-from)*e;
+          if(k<1) requestAnimationFrame(fr); else res(true);
+        })(t0);
+      });
+    }
+    function reveal(child,g){
+      var box=child.parentElement;
+      while(box&&box!==d.body){ var oy=w.getComputedStyle(box).overflowY; if((oy==='auto'||oy==='scroll')&&box.scrollHeight>box.clientHeight) break; box=box.parentElement; }
+      if(!box||box===d.body) box=d.scrollingElement;
+      var r=child.getBoundingClientRect(), b=box===d.scrollingElement?{top:0,height:w.innerHeight}:box.getBoundingClientRect();
+      var to=box.scrollTop+(r.top-b.top)-b.height*0.35;
+      return smoothTo(box,Math.max(0,Math.min(to,box.scrollHeight-box.clientHeight)),500,g);
+    }
+    async function scrollTour(g){
+      var el=scroller(), max=el.scrollHeight-el.clientHeight;
+      if(max<40) return wait(2200,g);
+      var n=Math.max(1,Math.min(4,Math.ceil(max/(el.clientHeight*0.85))));
+      for(var k=1;k<=n;k++){ if(!await smoothTo(el,max*k/n,1300,g)) return false; if(!await wait(900,g)) return false; }
+      if(!await wait(500,g)) return false;
+      return smoothTo(el,0,900,g);
+    }
+    return {alive:alive,wait:wait,scrollTour:scrollTour,reveal:reveal};
+  }
+
+  // what each site does on its tour
+  var recipes={
+    'METI-Dashboard-UI': {
+      setup: async function(w,a,g){ if(!w.TOKEN&&typeof w.startDemo==='function'){ w.startDemo(); await a.wait(1800,g); } },
+      run: async function(w,a,g){
+        var pages=['home','detailsofdata','labelers','qtc','qtcstats','attendance','attdetails','otdetails','wla','users'];
+        for(var i=0;i<pages.length;i++){
+          if(!a.alive(g)) return;
+          try{ w.navTo(pages[i]); }catch(e){}
+          if(!await a.wait(1700,g)) return;
+          await a.scrollTour(g);
+          if(!await a.wait(400,g)) return;
+        }
+      }
+    },
+    'Shortcut-Keys': {
+      run: async function(w,a,g){
+        var d=w.document, items=[].slice.call(d.querySelectorAll('.shortcut-item'));
+        var imp=items.filter(function(x){ return x.classList.contains('important'); });
+        var list=(imp.length>=6?imp:items).slice(0,24);
+        for(var i=0;i<list.length;i++){
+          if(!a.alive(g)) return;
+          var it=list[i];
+          await a.reveal(it,g);
+          it.dispatchEvent(new w.MouseEvent('mouseenter'));
+          it.style.outline='2px solid #1a73e8'; it.style.outlineOffset='2px';
+          var ok=await a.wait(1100,g);
+          it.dispatchEvent(new w.MouseEvent('mouseleave'));
+          it.style.outline=''; it.style.outlineOffset='';
+          if(!ok) return;
+        }
+        await a.scrollTour(g);
+      }
+    }
+  };
+  function recipeFor(f){ var path=''; try{ path=new URL(f.src).pathname; }catch(e){} var key=path.split('/').filter(Boolean)[0]||''; return recipes[key]||{}; }
+
+  function hook(f,w,s){
+    if(s.hooked===w) return; s.hooked=w;
+    function takeOver(e){
+      if(!e.isTrusted||s.stopped) return;
+      s.stopped=true; pause(f); var t=tag(f); if(t) t.classList.remove('on');
+    }
+    ['pointerdown','wheel','touchstart','keydown'].forEach(function(ev){ w.addEventListener(ev,takeOver,{capture:true,passive:true}); });
+  }
+  async function loop(f,w,s,g){
+    var a=engine(f,w,s), r=recipeFor(f);
+    try{ if(r.setup) await r.setup(w,a,g); }catch(e){}
+    while(a.alive(g)){
+      try{ if(r.run) await r.run(w,a,g); else { await a.scrollTour(g); await a.wait(1200,g); } }
+      catch(e){ await a.wait(1500,g); }
+    }
+  }
+  function start(f){
+    var s=st(f); if(s.running||s.stopped||reduce) return;
+    var w=win(f); if(!w||!w.document||w.document.readyState==='loading'||w.location.href==='about:blank') return;
+    hook(f,w,s);
+    s.running=true; s.gen++;
+    var t=tag(f); if(t) t.classList.add('on');
+    loop(f,w,s,s.gen);
+  }
+  function pause(f){ var s=st(f); s.running=false; s.timers.forEach(clearTimeout); s.timers=[]; var t=f.closest('.device'); t=t&&t.querySelector('.tour-tag'); if(t) t.classList.remove('on'); }
+  function visible(f){ var r=f.parentElement.getBoundingClientRect(); var h=Math.min(r.bottom,innerHeight)-Math.max(r.top,0); return h>r.height*0.6; }
+  function sync(f){ if(!f.src) return; if(visible(f)) start(f); else pause(f); }
+
+  var io=('IntersectionObserver' in window)?new IntersectionObserver(function(es){ es.forEach(function(e){ var f=e.target.querySelector('iframe'); if(f) sync(f); }); },{threshold:[0,.6,.9]}):null;
+  function watch(){ frames().forEach(function(f){
+    if(f.__tw) return; f.__tw=1;
+    if(io) io.observe(f.parentElement);
+    f.addEventListener('load',function(){ var s=st(f); pause(f); s.hooked=null; setTimeout(function(){ sync(f); },700); });
+  }); }
+  watch();
+  addEventListener('work:ready',function(){ setTimeout(watch,50); });
+  new MutationObserver(watch).observe(document.body,{subtree:true,childList:true});
 })();
 </script>
 </body>
